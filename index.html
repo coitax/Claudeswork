@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#1a1a2e">
+  <meta name="description" content="Learn Spanish through an 8-bit RPG adventure">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/retro.css">
+  <link rel="stylesheet" href="css/exercises.css">
+  <title>Spanish Quest RPG</title>
+</head>
+<body>
+  <div id="app">
+    <!-- Title Screen -->
+    <div id="screen-title" class="screen active">
+      <div class="title-container">
+        <h1 class="game-title">
+          <span class="title-line">SPANISH</span>
+          <span class="title-line accent">QUEST</span>
+          <span class="title-sub">RPG</span>
+        </h1>
+        <div class="title-pixel-art">
+          <div class="pixel-castle"></div>
+        </div>
+        <div class="title-menu">
+          <button class="retro-btn" id="btn-new-game">NEW GAME</button>
+          <button class="retro-btn" id="btn-continue" style="display:none">CONTINUE</button>
+          <button class="retro-btn" id="btn-daily-review" style="display:none">DAILY REVIEW</button>
+        </div>
+        <p class="title-footer">Learn Spanish. Level Up. Have Fun.</p>
+      </div>
+    </div>
+
+    <!-- New Game / Name Entry -->
+    <div id="screen-new-game" class="screen">
+      <div class="screen-content">
+        <h2 class="retro-heading">CREATE YOUR CHARACTER</h2>
+        <div class="pixel-character-preview"></div>
+        <label class="retro-label" for="player-name">ENTER YOUR NAME, ADVENTURER</label>
+        <input type="text" id="player-name" class="retro-input" maxlength="16" placeholder="..." autocomplete="off">
+        <button class="retro-btn primary" id="btn-start-adventure">START ADVENTURE</button>
+      </div>
+    </div>
+
+    <!-- World Map -->
+    <div id="screen-world-map" class="screen">
+      <div class="hud">
+        <div class="hud-left">
+          <span class="hud-level" id="hud-level">LV 1</span>
+          <div class="hud-xp-bar">
+            <div class="hud-xp-fill" id="hud-xp-fill"></div>
+          </div>
+        </div>
+        <div class="hud-right">
+          <button class="icon-btn" id="btn-character" title="Character">&#9818;</button>
+          <button class="icon-btn" id="btn-achievements" title="Achievements">&#9733;</button>
+          <button class="icon-btn" id="btn-sound-toggle" title="Sound">&#9835;</button>
+        </div>
+      </div>
+      <h2 class="retro-heading">WORLD MAP</h2>
+      <div class="world-map-container" id="world-map"></div>
+      <div class="streak-banner" id="streak-banner" style="display:none">
+        <span class="streak-fire">&#128293;</span>
+        <span id="streak-count">0</span> DAY STREAK
+      </div>
+    </div>
+
+    <!-- Level Select -->
+    <div id="screen-level-select" class="screen">
+      <div class="hud">
+        <div class="hud-left">
+          <button class="icon-btn" id="btn-back-map" title="Back">&#9664;</button>
+          <span class="hud-world-name" id="hud-world-name"></span>
+        </div>
+        <div class="hud-right">
+          <span class="hud-hearts" id="hud-hearts"></span>
+        </div>
+      </div>
+      <div class="level-grid" id="level-grid"></div>
+    </div>
+
+    <!-- Exercise Screen -->
+    <div id="screen-exercise" class="screen">
+      <div class="exercise-hud">
+        <div class="exercise-hud-left">
+          <span class="exercise-hearts" id="exercise-hearts"></span>
+        </div>
+        <div class="exercise-hud-center">
+          <div class="exercise-progress-bar">
+            <div class="exercise-progress-fill" id="exercise-progress-fill"></div>
+          </div>
+        </div>
+        <div class="exercise-hud-right">
+          <button class="icon-btn small" id="btn-exit-exercise" title="Exit">✕</button>
+        </div>
+      </div>
+      <div class="exercise-area" id="exercise-area"></div>
+    </div>
+
+    <!-- Results Screen -->
+    <div id="screen-results" class="screen">
+      <div class="results-container">
+        <h2 class="retro-heading" id="results-title">LEVEL COMPLETE!</h2>
+        <div class="results-stars" id="results-stars"></div>
+        <div class="results-stats" id="results-stats"></div>
+        <div class="results-xp-animation" id="results-xp"></div>
+        <div class="results-buttons">
+          <button class="retro-btn" id="btn-results-continue">CONTINUE</button>
+          <button class="retro-btn secondary" id="btn-results-retry">RETRY</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Character Screen -->
+    <div id="screen-character" class="screen">
+      <div class="screen-content">
+        <button class="icon-btn back-btn" id="btn-back-from-char">&#9664; BACK</button>
+        <h2 class="retro-heading">CHARACTER</h2>
+        <div class="char-card">
+          <div class="char-avatar"></div>
+          <div class="char-name" id="char-name"></div>
+          <div class="char-level" id="char-level"></div>
+          <div class="char-xp-bar">
+            <div class="char-xp-fill" id="char-xp-fill"></div>
+          </div>
+          <div class="char-xp-text" id="char-xp-text"></div>
+        </div>
+        <div class="stats-grid" id="stats-grid"></div>
+        <div class="abilities-list" id="abilities-list">
+          <h3 class="retro-subheading">ABILITIES</h3>
+        </div>
+      </div>
+    </div>
+
+    <!-- Achievements Screen -->
+    <div id="screen-achievements" class="screen">
+      <div class="screen-content">
+        <button class="icon-btn back-btn" id="btn-back-from-achievements">&#9664; BACK</button>
+        <h2 class="retro-heading">ACHIEVEMENTS</h2>
+        <div class="trophy-case" id="trophy-case"></div>
+      </div>
+    </div>
+
+    <!-- Daily Review Screen -->
+    <div id="screen-review" class="screen">
+      <div class="exercise-hud">
+        <div class="exercise-hud-left">
+          <span class="review-count" id="review-count"></span>
+        </div>
+        <div class="exercise-hud-center">
+          <h3 class="retro-subheading">DAILY REVIEW</h3>
+        </div>
+        <div class="exercise-hud-right">
+          <button class="icon-btn small" id="btn-exit-review" title="Exit">✕</button>
+        </div>
+      </div>
+      <div class="exercise-area" id="review-area"></div>
+    </div>
+  </div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/srs.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/exercises.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
