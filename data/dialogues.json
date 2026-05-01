@@ -1,0 +1,251 @@
+{
+  "meeting-stranger": {
+    "setting": "You meet someone in the plaza. She smiles and waves.",
+    "npc": "María",
+    "lines": [
+      { "speaker": "npc", "text": "¡Hola! Me llamo María. ¿Cómo te llamas?", "translation": "Hi! My name is María. What's your name?" },
+      { "speaker": "player", "options": [
+        { "text": "Me llamo Alex. Mucho gusto.", "correct": true, "feedback": "¡Perfecto! That's the natural way to introduce yourself." },
+        { "text": "Sí, buenas noches.", "correct": false, "feedback": "'Buenas noches' means 'good night' — she asked your name." },
+        { "text": "Gracias, adiós.", "correct": false, "feedback": "That means 'thanks, goodbye' — she's just meeting you!" }
+      ] },
+      { "speaker": "npc", "text": "Mucho gusto. ¿De dónde eres?", "translation": "Nice to meet you. Where are you from?" },
+      { "speaker": "player", "options": [
+        { "text": "Soy de Estados Unidos.", "correct": true, "feedback": "¡Bien! 'Soy de + place' is how you say where you're from." },
+        { "text": "Tengo de Estados Unidos.", "correct": false, "feedback": "Use 'soy de' (I am from) — not 'tengo' (I have)." },
+        { "text": "Estoy Estados Unidos.", "correct": false, "feedback": "Origin uses 'ser' not 'estar' — soy de…" }
+      ] },
+      { "speaker": "npc", "text": "¡Qué bien! Bienvenido. Hasta luego.", "translation": "Great! Welcome. See you later." }
+    ]
+  },
+
+  "asking-directions-basic": {
+    "setting": "You see a friendly man at the plaza. He looks ready to chat.",
+    "npc": "Carlos",
+    "lines": [
+      { "speaker": "npc", "text": "¡Hola! ¿Cómo estás hoy?", "translation": "Hello! How are you today?" },
+      { "speaker": "player", "options": [
+        { "text": "Estoy bien, gracias. ¿Y tú?", "correct": true, "feedback": "¡Excelente! Returning the question is polite." },
+        { "text": "Soy bien, gracias.", "correct": false, "feedback": "Feelings use 'estar' — 'estoy bien', not 'soy bien'." },
+        { "text": "Tengo bien.", "correct": false, "feedback": "'Tengo' = I have. For feelings use 'estoy'." }
+      ] },
+      { "speaker": "npc", "text": "Estoy muy contento. Hace sol hoy.", "translation": "I'm very happy. It's sunny today." },
+      { "speaker": "player", "options": [
+        { "text": "Sí, hace muy buen día.", "correct": true, "feedback": "¡Bien! Great way to continue weather chat." },
+        { "text": "No, tengo frío.", "correct": false, "feedback": "He just said it's sunny — try agreeing with the nice day." },
+        { "text": "Adiós, gracias.", "correct": false, "feedback": "Don't end the conversation yet — he just made small talk!" }
+      ] },
+      { "speaker": "npc", "text": "Que tengas buen día. ¡Adiós!", "translation": "Have a good day. Goodbye!" }
+    ]
+  },
+
+  "family-talk": {
+    "setting": "You're at a café with Ana, who shows you a family photo.",
+    "npc": "Ana",
+    "lines": [
+      { "speaker": "npc", "text": "Mira, esta es mi familia. Tengo dos hermanos.", "translation": "Look, this is my family. I have two brothers." },
+      { "speaker": "player", "options": [
+        { "text": "¿Cómo se llaman tus hermanos?", "correct": true, "feedback": "¡Perfecto! A natural follow-up question." },
+        { "text": "Yo tengo color azul.", "correct": false, "feedback": "That's a strange response — try asking about her family." },
+        { "text": "Adiós, hermano.", "correct": false, "feedback": "Don't say goodbye! Engage with her family story." }
+      ] },
+      { "speaker": "npc", "text": "Pedro y Luis. Mi madre se llama Sofía. ¿Y tu familia?", "translation": "Pedro and Luis. My mother is Sofía. And your family?" },
+      { "speaker": "player", "options": [
+        { "text": "Tengo una hermana. Mi madre se llama Linda.", "correct": true, "feedback": "¡Genial! Mirroring her structure is great." },
+        { "text": "Mi hermana tres.", "correct": false, "feedback": "Reorder: 'Tengo tres hermanas' = I have three sisters." },
+        { "text": "Mi padre soy Linda.", "correct": false, "feedback": "Use 'se llama' (is named): 'Mi madre se llama Linda.'" }
+      ] },
+      { "speaker": "npc", "text": "¡Qué bonita familia! Gracias por compartir.", "translation": "What a lovely family! Thanks for sharing." }
+    ]
+  },
+
+  "ordering-food": {
+    "setting": "You're at a food stand. The vendor smiles.",
+    "npc": "Pedro",
+    "lines": [
+      { "speaker": "npc", "text": "¡Bienvenido! ¿Qué quieres comer hoy?", "translation": "Welcome! What do you want to eat today?" },
+      { "speaker": "player", "options": [
+        { "text": "Quiero pollo con arroz, por favor.", "correct": true, "feedback": "¡Muy bien! Polite and clear." },
+        { "text": "Tengo pollo.", "correct": false, "feedback": "'Tengo' means 'I have' — use 'quiero' (I want) to order." },
+        { "text": "Soy pollo.", "correct": false, "feedback": "'Soy pollo' means 'I am chicken' — use 'quiero'!" }
+      ] },
+      { "speaker": "npc", "text": "Perfecto. ¿Quieres una bebida también?", "translation": "Perfect. Do you want a drink too?" },
+      { "speaker": "player", "options": [
+        { "text": "Sí, agua, por favor.", "correct": true, "feedback": "¡Bien! Simple and polite." },
+        { "text": "No agua, soy.", "correct": false, "feedback": "Just say 'No, gracias' or 'Sí, agua por favor.'" },
+        { "text": "Estoy agua.", "correct": false, "feedback": "Use 'quiero agua' (I want water)." }
+      ] },
+      { "speaker": "npc", "text": "Son ocho euros en total.", "translation": "That's eight euros total." },
+      { "speaker": "player", "options": [
+        { "text": "Aquí tienes. Gracias.", "correct": true, "feedback": "¡Perfecto! Polite handover." },
+        { "text": "Cuesta veinte.", "correct": false, "feedback": "He told you the price — just pay or confirm." },
+        { "text": "Soy ocho.", "correct": false, "feedback": "Just hand over the money: 'Aquí tienes.'" }
+      ] }
+    ]
+  },
+
+  "shopping-clothes": {
+    "setting": "You're at a clothing stall in the market.",
+    "npc": "Lucía",
+    "lines": [
+      { "speaker": "npc", "text": "Hola, ¿necesitas ayuda?", "translation": "Hello, do you need help?" },
+      { "speaker": "player", "options": [
+        { "text": "Sí, busco una camisa azul.", "correct": true, "feedback": "¡Bien! Specific and polite." },
+        { "text": "Soy azul camisa.", "correct": false, "feedback": "'Soy azul' = 'I am blue.' Use 'busco' (I'm looking for)." },
+        { "text": "No tengo dinero.", "correct": false, "feedback": "Don't lead with that! Just say what you're looking for." }
+      ] },
+      { "speaker": "npc", "text": "Tenemos camisas azules grandes y pequeñas. ¿Cuál quieres?", "translation": "We have big and small blue shirts. Which do you want?" },
+      { "speaker": "player", "options": [
+        { "text": "Quiero una grande, por favor.", "correct": true, "feedback": "¡Excelente! Clear choice." },
+        { "text": "Tengo grande.", "correct": false, "feedback": "Use 'quiero' to order, not 'tengo' (I have)." },
+        { "text": "Es muy feo.", "correct": false, "feedback": "Don't insult the merchandise! Pick a size." }
+      ] },
+      { "speaker": "npc", "text": "Cuesta veinte euros.", "translation": "It costs twenty euros." },
+      { "speaker": "player", "options": [
+        { "text": "Vale, la compro. Aquí tienes.", "correct": true, "feedback": "¡Perfecto! Standard purchase." },
+        { "text": "Es muy cara.", "correct": false, "feedback": "It's actually a fair price — try negotiating politely or accepting." },
+        { "text": "Quiero diez gratis.", "correct": false, "feedback": "That's not how it works! Just say yes or counter politely." }
+      ] }
+    ]
+  },
+
+  "weather-chat": {
+    "setting": "Diego is sitting on a bench, watching the sky.",
+    "npc": "Diego",
+    "lines": [
+      { "speaker": "npc", "text": "Hoy hace mucho calor, ¿no?", "translation": "It's really hot today, isn't it?" },
+      { "speaker": "player", "options": [
+        { "text": "Sí, hace mucho sol también.", "correct": true, "feedback": "¡Bien! Adding to his observation." },
+        { "text": "Tengo calor mucho.", "correct": false, "feedback": "Word order: 'Tengo mucho calor' — but 'Sí, hace mucho calor' fits the chat." },
+        { "text": "Hace nieva.", "correct": false, "feedback": "It's hot, not snowing! 'Hace sol' fits." }
+      ] },
+      { "speaker": "npc", "text": "¿Qué vas a hacer hoy?", "translation": "What are you going to do today?" },
+      { "speaker": "player", "options": [
+        { "text": "Voy a la playa esta tarde.", "correct": true, "feedback": "¡Genial! Future plan with 'voy a + place'." },
+        { "text": "Voy a soy playa.", "correct": false, "feedback": "Just one verb: 'Voy a la playa.'" },
+        { "text": "Tengo playa.", "correct": false, "feedback": "'Tengo' = I have. Use 'voy a' for plans." }
+      ] },
+      { "speaker": "npc", "text": "¡Qué bueno! Disfruta el día.", "translation": "How nice! Enjoy your day." }
+    ]
+  },
+
+  "asking-directions-city": {
+    "setting": "You're lost downtown. You stop a kind-looking woman.",
+    "npc": "Rosa",
+    "lines": [
+      { "speaker": "npc", "text": "¿Necesitas ayuda?", "translation": "Do you need help?" },
+      { "speaker": "player", "options": [
+        { "text": "Sí, ¿dónde está la biblioteca?", "correct": true, "feedback": "¡Bien! Direct and polite." },
+        { "text": "Soy la biblioteca.", "correct": false, "feedback": "Use 'dónde está' (where is) to ask for a place." },
+        { "text": "Tengo lejos.", "correct": false, "feedback": "Use 'está lejos' (it's far) — but better to ask 'dónde está…'" }
+      ] },
+      { "speaker": "npc", "text": "Sigue recto dos calles, después a la derecha.", "translation": "Go straight two streets, then turn right." },
+      { "speaker": "player", "options": [
+        { "text": "Recto y a la derecha. Gracias.", "correct": true, "feedback": "¡Perfecto! Confirming shows you understood." },
+        { "text": "Izquierda dos calles.", "correct": false, "feedback": "She said RIGHT, not left — derecha." },
+        { "text": "No entiendo nada.", "correct": false, "feedback": "Try repeating what you understood — that helps." }
+      ] },
+      { "speaker": "npc", "text": "Está cerca del semáforo. ¡Buena suerte!", "translation": "It's near the traffic light. Good luck!" }
+    ]
+  },
+
+  "daily-routine": {
+    "setting": "Your friend Miguel asks about your morning over coffee.",
+    "npc": "Miguel",
+    "lines": [
+      { "speaker": "npc", "text": "¿A qué hora te levantas normalmente?", "translation": "What time do you usually wake up?" },
+      { "speaker": "player", "options": [
+        { "text": "Me levanto a las siete.", "correct": true, "feedback": "¡Bien! Reflexive verb correctly used." },
+        { "text": "Yo levanto siete.", "correct": false, "feedback": "Reflexive: 'me levanto' — I get myself up." },
+        { "text": "Me ducho mañana.", "correct": false, "feedback": "'Ducharse' = to shower. He asked when you get up." }
+      ] },
+      { "speaker": "npc", "text": "Yo me levanto a las seis. Después desayuno y trabajo.", "translation": "I get up at six. Then I have breakfast and work." },
+      { "speaker": "player", "options": [
+        { "text": "¡Qué temprano! Yo desayuno y luego trabajo también.", "correct": true, "feedback": "¡Perfecto! Sharing your routine in return." },
+        { "text": "No me gusta seis.", "correct": false, "feedback": "Try sharing your routine — that's what he's looking for." },
+        { "text": "Trabajar acostarse hoy.", "correct": false, "feedback": "Words are out of order. Try a complete sentence." }
+      ] },
+      { "speaker": "npc", "text": "Buena rutina. ¡Que tengas un buen día!", "translation": "Good routine. Have a great day!" }
+    ]
+  },
+
+  "phone-call": {
+    "setting": "Your phone buzzes. It's Sofia.",
+    "npc": "Sofia",
+    "lines": [
+      { "speaker": "npc", "text": "¡Hola! ¿Qué haces ahora?", "translation": "Hi! What are you doing now?" },
+      { "speaker": "player", "options": [
+        { "text": "Nada importante. ¿Qué pasa?", "correct": true, "feedback": "¡Bien! Casual and inviting." },
+        { "text": "Tengo nada.", "correct": false, "feedback": "Just say 'nada' (nothing) or 'No mucho.'" },
+        { "text": "Soy ahora.", "correct": false, "feedback": "Try 'No hago nada' (I'm not doing anything) instead." }
+      ] },
+      { "speaker": "npc", "text": "¿Quieres ir al cine esta noche?", "translation": "Do you want to go to the movies tonight?" },
+      { "speaker": "player", "options": [
+        { "text": "¡Vale! ¿A qué hora?", "correct": true, "feedback": "¡Perfecto! Agreeing and getting details." },
+        { "text": "No, soy ocupado.", "correct": false, "feedback": "Use 'estoy ocupado' for being busy. But say yes — it's a fun plan!" },
+        { "text": "Mañana fui cine.", "correct": false, "feedback": "Mixed tenses. Try: 'Sí, vamos a las ocho.'" }
+      ] },
+      { "speaker": "npc", "text": "A las ocho. ¡Hasta luego!", "translation": "At eight. See you later!" }
+    ]
+  },
+
+  "hotel-checkin": {
+    "setting": "You arrive at the hotel reception, suitcase in hand.",
+    "npc": "Recepcionista",
+    "lines": [
+      { "speaker": "npc", "text": "Buenas tardes, ¿tiene reserva?", "translation": "Good afternoon, do you have a reservation?" },
+      { "speaker": "player", "options": [
+        { "text": "Sí, tengo una reserva a nombre de Alex.", "correct": true, "feedback": "¡Excelente! Very natural check-in line." },
+        { "text": "Soy reserva.", "correct": false, "feedback": "Use 'tengo una reserva' (I have a reservation)." },
+        { "text": "No, no quiero reserva.", "correct": false, "feedback": "Just confirm you have one — 'Sí, tengo reserva.'" }
+      ] },
+      { "speaker": "npc", "text": "Aquí tiene su llave. Habitación 302, segundo piso.", "translation": "Here's your key. Room 302, second floor." },
+      { "speaker": "player", "options": [
+        { "text": "Gracias. ¿Hay ascensor?", "correct": true, "feedback": "¡Bien! Practical follow-up." },
+        { "text": "Llave es bien.", "correct": false, "feedback": "Try a complete reply: 'Gracias' is enough or ask a question." },
+        { "text": "Yo soy 302.", "correct": false, "feedback": "Funny but no — 'gracias' is what you want." }
+      ] },
+      { "speaker": "npc", "text": "Sí, a la derecha. ¡Que tenga buena estancia!", "translation": "Yes, to the right. Have a good stay!" }
+    ]
+  },
+
+  "future-plans": {
+    "setting": "Roberto asks about your future at a party.",
+    "npc": "Roberto",
+    "lines": [
+      { "speaker": "npc", "text": "¿Qué harás el próximo año?", "translation": "What will you do next year?" },
+      { "speaker": "player", "options": [
+        { "text": "Iré a España a estudiar.", "correct": true, "feedback": "¡Genial! Future tense used correctly." },
+        { "text": "Voy ayer España.", "correct": false, "feedback": "'Ayer' is yesterday — use future: 'Iré' or 'Voy a ir'." },
+        { "text": "Fui España siempre.", "correct": false, "feedback": "'Fui' is past. Use 'iré' (I will go) for the future." }
+      ] },
+      { "speaker": "npc", "text": "¡Qué interesante! Deberías visitar Sevilla. Es muy bonita.", "translation": "How interesting! You should visit Seville. It's very pretty." },
+      { "speaker": "player", "options": [
+        { "text": "Gracias por el consejo. ¡Lo haré!", "correct": true, "feedback": "¡Perfecto! Accepting advice graciously." },
+        { "text": "No deberías tú.", "correct": false, "feedback": "He's giving YOU advice — accept or thank him." },
+        { "text": "Sevilla soy.", "correct": false, "feedback": "Try 'Quiero visitarla' (I want to visit it)." }
+      ] },
+      { "speaker": "npc", "text": "Vas a tener una experiencia genial.", "translation": "You'll have a great experience." }
+    ]
+  },
+
+  "debate-topic": {
+    "setting": "You're at a dinner party. Elena starts a friendly debate.",
+    "npc": "Elena",
+    "lines": [
+      { "speaker": "npc", "text": "Creo que es mejor vivir en la ciudad que en el campo.", "translation": "I think living in the city is better than in the country." },
+      { "speaker": "player", "options": [
+        { "text": "No estoy de acuerdo. El campo es más tranquilo.", "correct": true, "feedback": "¡Excelente! Polite disagreement with reason." },
+        { "text": "Sí ciudad mejor.", "correct": false, "feedback": "Try a full sentence: 'Estoy de acuerdo' or 'No estoy de acuerdo.'" },
+        { "text": "Soy ciudad campo.", "correct": false, "feedback": "Try expressing your opinion clearly." }
+      ] },
+      { "speaker": "npc", "text": "Pero la ciudad tiene más oportunidades.", "translation": "But the city has more opportunities." },
+      { "speaker": "player", "options": [
+        { "text": "Sin embargo, el campo es más sano.", "correct": true, "feedback": "¡Genial! Using 'sin embargo' to counter is sophisticated." },
+        { "text": "Es verdad ciudad sí.", "correct": false, "feedback": "Try: 'Es verdad, pero…' or 'Sin embargo…'" },
+        { "text": "Adiós Elena.", "correct": false, "feedback": "Don't leave the conversation! Counter her point." }
+      ] },
+      { "speaker": "npc", "text": "Buenos puntos. En conclusión, depende de la persona.", "translation": "Good points. In conclusion, it depends on the person." }
+    ]
+  }
+}

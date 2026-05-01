@@ -1,0 +1,207 @@
+{
+  "achievements": [
+    {
+      "id": "first_words",
+      "name": "First Words",
+      "desc": "Complete your first lesson",
+      "icon": "📖",
+      "condition": { "type": "levels_completed", "count": 1 }
+    },
+    {
+      "id": "getting_started",
+      "name": "Getting Started",
+      "desc": "Complete 5 lessons",
+      "icon": "🎓",
+      "condition": { "type": "levels_completed", "count": 5 }
+    },
+    {
+      "id": "scholar",
+      "name": "Scholar",
+      "desc": "Complete 15 lessons",
+      "icon": "📚",
+      "condition": { "type": "levels_completed", "count": 15 }
+    },
+    {
+      "id": "master_student",
+      "name": "Master Student",
+      "desc": "Complete 30 lessons",
+      "icon": "🏆",
+      "condition": { "type": "levels_completed", "count": 30 }
+    },
+    {
+      "id": "perfectionist",
+      "name": "Perfectionist",
+      "desc": "Get 3 stars on any level",
+      "icon": "⭐",
+      "condition": { "type": "three_stars", "count": 1 }
+    },
+    {
+      "id": "star_collector",
+      "name": "Star Collector",
+      "desc": "Get 3 stars on 10 levels",
+      "icon": "🌟",
+      "condition": { "type": "three_stars", "count": 10 }
+    },
+    {
+      "id": "on_fire",
+      "name": "On Fire",
+      "desc": "Maintain a 7-day streak",
+      "icon": "🔥",
+      "condition": { "type": "streak", "count": 7 }
+    },
+    {
+      "id": "dedicated",
+      "name": "Dedicated",
+      "desc": "Maintain a 30-day streak",
+      "icon": "💪",
+      "condition": { "type": "streak", "count": 30 }
+    },
+    {
+      "id": "unstoppable",
+      "name": "Unstoppable",
+      "desc": "Maintain a 100-day streak",
+      "icon": "⚡",
+      "condition": { "type": "streak", "count": 100 }
+    },
+    {
+      "id": "vocab_10",
+      "name": "Word Learner",
+      "desc": "Learn 10 vocabulary words",
+      "icon": "💬",
+      "condition": { "type": "vocab_mastered", "count": 10 }
+    },
+    {
+      "id": "vocab_50",
+      "name": "Word Smith",
+      "desc": "Learn 50 vocabulary words",
+      "icon": "📝",
+      "condition": { "type": "vocab_mastered", "count": 50 }
+    },
+    {
+      "id": "centurion",
+      "name": "Centurion",
+      "desc": "Learn 100 vocabulary words",
+      "icon": "🗡",
+      "condition": { "type": "vocab_mastered", "count": 100 }
+    },
+    {
+      "id": "polyglot",
+      "name": "Polyglot",
+      "desc": "Learn 250 vocabulary words",
+      "icon": "🌍",
+      "condition": { "type": "vocab_mastered", "count": 250 }
+    },
+    {
+      "id": "boss_slayer",
+      "name": "Boss Slayer",
+      "desc": "Defeat your first boss",
+      "icon": "⚔",
+      "condition": { "type": "bosses_defeated", "count": 1 }
+    },
+    {
+      "id": "boss_hunter",
+      "name": "Boss Hunter",
+      "desc": "Defeat 3 bosses",
+      "icon": "🐉",
+      "condition": { "type": "bosses_defeated", "count": 3 }
+    },
+    {
+      "id": "boss_master",
+      "name": "Boss Master",
+      "desc": "Defeat all 5 bosses",
+      "icon": "👑",
+      "condition": { "type": "bosses_defeated", "count": 5 }
+    },
+    {
+      "id": "plaza_complete",
+      "name": "Plaza Graduate",
+      "desc": "Complete all of La Plaza",
+      "icon": "🏛",
+      "condition": { "type": "world_complete", "world": "plaza" }
+    },
+    {
+      "id": "mercado_complete",
+      "name": "Market Master",
+      "desc": "Complete all of El Mercado",
+      "icon": "🏪",
+      "condition": { "type": "world_complete", "world": "mercado" }
+    },
+    {
+      "id": "ciudad_complete",
+      "name": "City Explorer",
+      "desc": "Complete all of La Ciudad",
+      "icon": "🏙",
+      "condition": { "type": "world_complete", "world": "ciudad" }
+    },
+    {
+      "id": "viaje_complete",
+      "name": "World Traveler",
+      "desc": "Complete all of El Viaje",
+      "icon": "✈",
+      "condition": { "type": "world_complete", "world": "viaje" }
+    },
+    {
+      "id": "fiesta_complete",
+      "name": "Fiesta Champion",
+      "desc": "Complete all of La Fiesta",
+      "icon": "🎉",
+      "condition": { "type": "world_complete", "world": "fiesta" }
+    },
+    {
+      "id": "level_5",
+      "name": "Apprentice",
+      "desc": "Reach level 5",
+      "icon": "🌱",
+      "condition": { "type": "player_level", "count": 5 }
+    },
+    {
+      "id": "level_10",
+      "name": "Adventurer",
+      "desc": "Reach level 10",
+      "icon": "🗺",
+      "condition": { "type": "player_level", "count": 10 }
+    },
+    {
+      "id": "level_25",
+      "name": "Veteran",
+      "desc": "Reach level 25",
+      "icon": "🛡",
+      "condition": { "type": "player_level", "count": 25 }
+    },
+    {
+      "id": "level_50",
+      "name": "Legend",
+      "desc": "Reach level 50",
+      "icon": "✨",
+      "condition": { "type": "player_level", "count": 50 }
+    },
+    {
+      "id": "xp_1000",
+      "name": "XP Seeker",
+      "desc": "Earn 1,000 XP total",
+      "icon": "💎",
+      "condition": { "type": "total_xp", "count": 1000 }
+    },
+    {
+      "id": "xp_10000",
+      "name": "XP Hunter",
+      "desc": "Earn 10,000 XP total",
+      "icon": "💰",
+      "condition": { "type": "total_xp", "count": 10000 }
+    },
+    {
+      "id": "daily_reviewer",
+      "name": "Daily Reviewer",
+      "desc": "Complete a daily review session",
+      "icon": "🔄",
+      "condition": { "type": "reviews_completed", "count": 1 }
+    },
+    {
+      "id": "review_master",
+      "name": "Review Master",
+      "desc": "Complete 30 daily reviews",
+      "icon": "🧠",
+      "condition": { "type": "reviews_completed", "count": 30 }
+    }
+  ]
+}
