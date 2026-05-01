@@ -1,0 +1,594 @@
+{
+  "worlds": [
+    {
+      "id": "plaza",
+      "name": "La Plaza",
+      "description": "The town square — where every conversation begins",
+      "cefr": "A1",
+      "icon": "🏛",
+      "levels": [
+        {
+          "id": "plaza-1",
+          "name": "¡Hola!",
+          "description": "Greetings and goodbyes",
+          "vocab": ["hola", "adiós", "buenos_días", "buenas_noches", "buenas_tardes", "gracias", "por_favor", "de_nada", "sí", "no"],
+          "exercises": [
+            { "type": "flashcard", "items": ["hola", "adiós", "buenos_días", "buenas_noches", "gracias"] },
+            { "type": "match", "words": ["hola", "adiós", "gracias", "por_favor", "de_nada", "sí"] },
+            { "type": "fill-blank", "sentences": [
+              { "sentence": "___ días, profesor.", "answer": "Buenos", "distractors": ["Buenas", "Hola", "Gracias"], "hint": "Good morning", "feedback": "'Buenos días' is masculine — días is masculine plural." },
+              { "sentence": "—Gracias. —De ___.", "answer": "nada", "distractors": ["sí", "no", "adiós"], "hint": "You're welcome", "feedback": "'De nada' literally means 'of nothing' — the standard response to gracias." }
+            ] },
+            { "type": "dialogue", "scene": "meeting-stranger" },
+            { "type": "translate", "items": [
+              { "direction": "en-es", "source": "Hello, how are you?", "answer": "Hola cómo estás", "words": ["Hola", "cómo", "estás", "adiós", "bien", "gracias"] },
+              { "direction": "es-en", "source": "Buenos días, gracias.", "answer": "Good morning thank you", "words": ["Good", "morning", "thank", "you", "night", "afternoon"] }
+            ] }
+          ]
+        },
+        {
+          "id": "plaza-2",
+          "name": "Me llamo...",
+          "description": "Introducing yourself",
+          "vocab": ["me_llamo", "cómo_te_llamas", "mucho_gusto", "soy", "de_dónde_eres", "yo", "tú", "él", "ella", "nosotros"],
+          "exercises": [
+            { "type": "flashcard", "items": ["me_llamo", "mucho_gusto", "soy", "yo", "tú"] },
+            { "type": "match", "words": ["me_llamo", "soy", "yo", "tú", "él", "ella"] },
+            { "type": "fill-blank", "sentences": [
+              { "sentence": "Me ___ Carlos.", "answer": "llamo", "distractors": ["soy", "tengo", "estoy"], "hint": "My name is", "feedback": "'Me llamo' literally means 'I call myself.'" },
+              { "sentence": "Mucho ___.", "answer": "gusto", "distractors": ["bien", "gracias", "favor"], "hint": "Nice to meet you", "feedback": "'Mucho gusto' = 'much pleasure' = nice to meet you." }
+            ] },
+            { "type": "translate", "items": [
+              { "direction": "en-es", "source": "I am Ana", "answer": "Yo soy Ana", "words": ["Yo", "soy", "Ana", "tú", "es", "ella"] }
+            ] }
+          ]
+        },
+        {
+          "id": "plaza-3",
+          "name": "Uno, dos, tres",
+          "description": "Numbers 1 through 20",
+          "vocab": ["uno", "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho", "nueve", "diez", "once", "doce", "trece", "catorce", "quince", "dieciséis", "diecisiete", "dieciocho", "diecinueve", "veinte"],
+          "exercises": [
+            { "type": "flashcard", "items": ["uno", "dos", "tres", "cuatro", "cinco", "diez", "quince", "veinte"] },
+            { "type": "match", "words": ["uno", "tres", "cinco", "siete", "diez", "veinte"] },
+            { "type": "fill-blank", "sentences": [
+              { "sentence": "Uno, dos, ___, cuatro.", "answer": "tres", "distractors": ["cinco", "seis", "diez"], "hint": "Counting in order", "feedback": "After dos (2) comes tres (3)." },
+              { "sentence": "Diez más diez son ___.", "answer": "veinte", "distractors": ["once", "quince", "treinta"], "hint": "10 + 10 = ?", "feedback": "10 + 10 = 20 = veinte." }
+            ] }
+          ]
+        },
+        {
+          "id": "plaza-4",
+          "name": "Ser o estar",
+          "description": "Two ways to say 'to be'",
+          "vocab": ["ser_soy", "eres", "es", "somos", "son", "estoy", "estás", "está", "estamos", "están"],
+          "exercises": [
+            { "type": "flashcard", "items": ["ser_soy", "eres", "es", "estoy", "estás", "está"] },
+            { "type": "match", "words": ["ser_soy", "eres", "es", "estoy", "estás", "está"] },
+            { "type": "fill-blank", "sentences": [
+              { "sentence": "Yo ___ estudiante.", "answer": "soy", "distractors": ["estoy", "tengo", "es"], "hint": "Identity uses ser", "feedback": "Use 'soy' (ser) for permanent identity." },
+              { "sentence": "¿Cómo ___?", "answer": "estás", "distractors": ["eres", "es", "estoy"], "hint": "How are you?", "feedback": "'Estar' (estás) is for temporary states — feelings, location, condition." },
+              { "sentence": "Ella ___ en la casa.", "answer": "está", "distractors": ["es", "soy", "son"], "hint": "Location uses estar", "feedback": "Location always uses estar — está en la casa." }
+            ] }
+          ]
+        },
+        {
+          "id": "plaza-5",
+          "name": "¿Qué? ¿Dónde?",
+          "description": "Asking common questions",
+          "vocab": ["qué", "dónde", "quién", "cuándo", "cómo", "por_qué", "cuánto", "cuál"],
+          "exercises": [
+            { "type": "flashcard", "items": ["qué", "dónde", "quién", "cuándo", "cómo"] },
+            { "type": "match", "words": ["qué", "dónde", "quién", "cuándo", "cómo", "por_qué"] },
+            { "type": "fill-blank", "sentences": [
+              { "sentence": "¿___ vives?", "answer": "Dónde", "distractors": ["Qué", "Quién", "Cómo"], "hint": "Asking about location", "feedback": "'¿Dónde vives?' = Where do you live?" },
+              { "sentence": "¿___ es ella?", "answer": "Quién", "distractors": ["Qué", "Dónde", "Cuándo"], "hint": "Asking about a person", "feedback": "'¿Quién?' asks who someone is." }
+            ] },
+            { "type": "translate", "items": [
+              { "direction": "en-es", "source": "What is this", "answer": "Qué es esto", "words": ["Qué", "es", "esto", "Dónde", "Cuál", "está"] }
+            ] }
+          ]
+        },
+        {
+          "id": "plaza-6",
+          "name": "Mi familia",
+          "description": "Talking about family",
+          "vocab": ["madre", "padre", "hermano", "hermana", "hijo", "hija", "abuelo", "abuela", "tío", "tía"],
+          "exercises": [
+            { "type": "flashcard", "items": ["madre", "padre", "hermano", "hermana", "abuelo", "abuela"] },
+            { "type": "match", "words": ["madre", "padre", "hermano", "hermana", "hijo", "hija"] },
+            { "type": "fill-blank", "sentences": [
+              { "sentence": "Mi ___ se llama Juan (male parent).", "answer": "padre", "distractors": ["madre", "hermano", "abuelo"], "hint": "Father", "feedback": "'Padre' = father." },
+              { "sentence": "La hermana de mi padre es mi ___.", "answer": "tía", "distractors": ["tío", "abuela", "hermana"], "hint": "Aunt", "feedback": "'Tía' = aunt (father's or mother's sister)." }
+            ] },
+            { "type": "dialogue", "scene": "family-talk" }
+          ]
+        },
+        {
+          "id": "plaza-7",
+          "name": "¿Cómo estás?",
+          "description": "Expressing feelings",
+          "vocab": ["feliz", "triste", "cansado", "enojado", "bien", "mal", "así_así", "enfermo", "contento", "nervioso"],
+          "exercises": [
+            { "type": "flashcard", "items": ["feliz", "triste", "cansado", "enojado", "bien", "mal"] },
+            { "type": "match", "words": ["feliz", "triste", "cansado", "bien", "mal", "enfermo"] },
+            { "type": "fill-blank", "sentences": [
+              { "sentence": "Estoy muy ___ hoy. ¡Sonrío!", "answer": "feliz", "distractors": ["triste", "enojado", "enfermo"], "hint": "Happy", "feedback": "Smiling = feliz (happy)." },
+              { "sentence": "—¿Cómo estás? —Estoy ___, gracias.", "answer": "bien", "distractors": ["mal", "feliz", "cansado"], "hint": "Standard polite response", "feedback": "'Bien' (well/fine) is the standard polite reply." }
+            ] },
+            { "type": "dialogue", "scene": "asking-directions-basic" }
+          ]
+        },
+        {
+          "id": "plaza-8",
+          "name": "Plaza Boss",
+          "description": "Prove your mastery of La Plaza!",
+          "isBoss": true,
+          "timeLimit": 120,
+          "vocab": ["hola", "adiós", "gracias", "me_llamo", "soy", "uno", "dos", "tres", "estoy", "es", "qué", "dónde", "madre", "padre", "feliz", "bien"],
+          "exercises": []
+        }
+      ]
+    },
+    {
+      "id": "mercado",
+      "name": "El Mercado",
+      "description": "The market — food, prices, and shopping",
+      "cefr": "A1",
+      "icon": "🏪",
+      "levels": [
+        {
+          "id": "mercado-1",
+          "name": "¡Qué rico!",
+          "description": "Food vocabulary",
+          "vocab": ["comida", "agua", "pan", "carne", "pollo", "arroz", "fruta", "leche", "huevo", "queso"],
+          "exercises": [
+            { "type": "flashcard", "items": ["comida", "agua", "pan", "carne", "pollo", "leche"] },
+            { "type": "match", "words": ["pan", "carne", "pollo", "arroz", "fruta", "leche"] },
+            { "type": "fill-blank", "sentences": [
+              { "sentence": "Quiero ___ con queso.", "answer": "pan", "distractors": ["agua", "leche", "fruta"], "hint": "Bread", "feedback": "'Pan' = bread. Pan con queso is a common Spanish snack." }
+            ] },
+            { "type": "translate", "items": [
+              { "direction": "en-es", "source": "I want water please", "answer": "Quiero agua por favor", "words": ["Quiero", "agua", "por", "favor", "pan", "leche"] }
+            ] }
+          ]
+        },
+        {
+          "id": "mercado-2",
+          "name": "Rojo y azul",
+          "description": "Colors and descriptions",
+          "vocab": ["rojo", "azul", "verde", "amarillo", "negro", "blanco", "grande", "pequeño", "bonito", "feo"],
+          "exercises": [
+            { "type": "flashcard", "items": ["rojo", "azul", "verde", "amarillo", "negro", "blanco"] },
+            { "type": "match", "words": ["rojo", "azul", "verde", "amarillo", "grande", "pequeño"] },
+            { "type": "fill-blank", "sentences": [
+              { "sentence": "El cielo es ___.", "answer": "azul", "distractors": ["verde", "rojo", "amarillo"], "hint": "Blue sky", "feedback": "Sky is azul (blue)." },
+              { "sentence": "Una manzana es ___.", "answer": "roja", "distractors": ["azul", "verde", "negra"], "hint": "Apple color (feminine)", "feedback": "Manzana is feminine, so 'roja' (not rojo)." }
+            ] }
+          ]
+        },
+        {
+          "id": "mercado-3",
+          "name": "¿Cuánto cuesta?",
+          "description": "Numbers 20-100 and prices",
+          "vocab": ["veinte", "treinta", "cuarenta", "cincuenta", "sesenta", "setenta", "ochenta", "noventa", "cien", "cuesta", "dinero", "precio", "barato", "caro"],
+          "exercises": [
+            { "type": "flashcard", "items": ["treinta", "cuarenta", "cincuenta", "cien", "cuesta", "barato"] },
+            { "type": "match", "words": ["veinte", "treinta", "cincuenta", "cien", "barato", "caro"] },
+            { "type": "fill-blank", "sentences": [
+              { "sentence": "¿Cuánto ___ esto?", "answer": "cuesta", "distractors": ["es", "tiene", "está"], "hint": "How much does it cost?", "feedback": "'¿Cuánto cuesta?' = How much does it cost?" },
+              { "sentence": "Treinta más diez son ___.", "answer": "cuarenta", "distractors": ["cincuenta", "veinte", "sesenta"], "hint": "30 + 10", "feedback": "30 + 10 = 40 = cuarenta." }
+            ] }
+          ]
+        },
+        {
+          "id": "mercado-4",
+          "name": "Tengo hambre",
+          "description": "Ordering food",
+          "vocab": ["tengo", "tienes", "tiene", "quiero", "quieres", "quiere", "hambre", "sed", "comida", "bebida"],
+          "exercises": [
+            { "type": "flashcard", "items": ["tengo", "tienes", "quiero", "quieres", "hambre", "sed"] },
+            { "type": "match", "words": ["tengo", "tienes", "quiero", "quieres", "hambre", "sed"] },
+            { "type": "fill-blank", "sentences": [
+              { "sentence": "___ hambre. Quiero comer.", "answer": "Tengo", "distractors": ["Soy", "Estoy", "Quiero"], "hint": "I have hunger = I'm hungry", "feedback": "Spanish uses 'tener hambre' (have hunger), not 'estar hambriento.'" }
+            ] },
+            { "type": "dialogue", "scene": "ordering-food" }
+          ]
+        },
+        {
+          "id": "mercado-5",
+          "name": "De compras",
+          "description": "Shopping vocabulary",
+          "vocab": ["comprar", "vender", "tienda", "mercado", "pagar", "cambio", "bolsa", "recibo", "oferta", "descuento"],
+          "exercises": [
+            { "type": "flashcard", "items": ["comprar", "vender", "tienda", "mercado", "pagar", "bolsa"] },
+            { "type": "match", "words": ["comprar", "vender", "tienda", "pagar", "bolsa", "recibo"] },
+            { "type": "fill-blank", "sentences": [
+              { "sentence": "Voy a ___ pan en la tienda.", "answer": "comprar", "distractors": ["vender", "pagar", "tener"], "hint": "To buy", "feedback": "Go to store + buy = comprar." }
+            ] },
+            { "type": "dialogue", "scene": "shopping-clothes" }
+          ]
+        },
+        {
+          "id": "mercado-6",
+          "name": "Lunes, martes...",
+          "description": "Days, months, and time",
+          "vocab": ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo", "enero", "febrero", "marzo", "hora", "minuto", "mañana", "tarde", "noche"],
+          "exercises": [
+            { "type": "flashcard", "items": ["lunes", "martes", "viernes", "sábado", "enero", "diciembre"] },
+            { "type": "match", "words": ["lunes", "viernes", "sábado", "domingo", "enero", "diciembre"] },
+            { "type": "fill-blank", "sentences": [
+              { "sentence": "Después del lunes es ___.", "answer": "martes", "distractors": ["domingo", "miércoles", "viernes"], "hint": "Day after Monday", "feedback": "Monday → Tuesday = lunes → martes." },
+              { "sentence": "Trabajo de lunes a ___.", "answer": "viernes", "distractors": ["sábado", "domingo", "martes"], "hint": "Last weekday", "feedback": "The work week ends on Friday (viernes)." }
+            ] }
+          ]
+        },
+        {
+          "id": "mercado-7",
+          "name": "Hace sol",
+          "description": "Talking about the weather",
+          "vocab": ["hace_sol", "hace_frío", "hace_calor", "llueve", "nieva", "nublado", "viento", "temperatura", "clima", "estación"],
+          "exercises": [
+            { "type": "flashcard", "items": ["hace_sol", "hace_frío", "hace_calor", "llueve", "nieva", "nublado"] },
+            { "type": "match", "words": ["hace_sol", "hace_frío", "llueve", "nieva", "nublado", "viento"] },
+            { "type": "fill-blank", "sentences": [
+              { "sentence": "En invierno ___ frío.", "answer": "hace", "distractors": ["es", "está", "tiene"], "hint": "Weather uses hacer", "feedback": "Weather expressions use 'hacer' — hace frío, hace calor." }
+            ] },
+            { "type": "dialogue", "scene": "weather-chat" }
+          ]
+        },
+        {
+          "id": "mercado-8",
+          "name": "Market Boss",
+          "description": "Survive the market!",
+          "isBoss": true,
+          "timeLimit": 120,
+          "vocab": ["pan", "agua", "rojo", "azul", "veinte", "cincuenta", "tengo", "quiero", "comprar", "lunes", "viernes", "hace_sol"],
+          "exercises": []
+        }
+      ]
+    },
+    {
+      "id": "ciudad",
+      "name": "La Ciudad",
+      "description": "The city — directions, transport, daily life",
+      "cefr": "A2",
+      "icon": "🏙",
+      "levels": [
+        {
+          "id": "ciudad-1",
+          "name": "A la izquierda",
+          "description": "Asking and giving directions",
+          "vocab": ["izquierda", "derecha", "recto", "cerca", "lejos", "esquina", "calle", "avenida", "cruce", "semáforo"],
+          "exercises": [
+            { "type": "flashcard", "items": ["izquierda", "derecha", "recto", "cerca", "lejos", "esquina"] },
+            { "type": "match", "words": ["izquierda", "derecha", "recto", "cerca", "lejos", "calle"] },
+            { "type": "fill-blank", "sentences": [
+              { "sentence": "Sigue ___ y luego a la derecha.", "answer": "recto", "distractors": ["lejos", "cerca", "izquierda"], "hint": "Straight ahead", "feedback": "'Recto' = straight." }
+            ] },
+            { "type": "dialogue", "scene": "asking-directions-city" }
+          ]
+        },
+        {
+          "id": "ciudad-2",
+          "name": "El autobús",
+          "description": "Transportation",
+          "vocab": ["autobús", "tren", "taxi", "coche", "bicicleta", "avión", "metro", "parada", "estación_transporte", "boleto"],
+          "exercises": [
+            { "type": "flashcard", "items": ["autobús", "tren", "taxi", "coche", "metro", "boleto"] },
+            { "type": "match", "words": ["autobús", "tren", "taxi", "coche", "metro", "avión"] },
+            { "type": "fill-blank", "sentences": [
+              { "sentence": "Tomo el ___ al trabajo.", "answer": "autobús", "distractors": ["avión", "tren", "boleto"], "hint": "Public transit", "feedback": "Common daily transit = autobús." }
+            ] },
+            { "type": "translate", "items": [
+              { "direction": "en-es", "source": "I take the train", "answer": "Tomo el tren", "words": ["Tomo", "el", "tren", "taxi", "voy", "metro"] }
+            ] }
+          ]
+        },
+        {
+          "id": "ciudad-3",
+          "name": "Mi día",
+          "description": "Daily routines (reflexive verbs)",
+          "vocab": ["levantarse", "ducharse", "vestirse", "desayunar", "almorzar", "cenar", "acostarse", "dormirse", "lavarse", "peinarse"],
+          "exercises": [
+            { "type": "flashcard", "items": ["levantarse", "ducharse", "desayunar", "almorzar", "cenar", "acostarse"] },
+            { "type": "match", "words": ["levantarse", "ducharse", "desayunar", "almorzar", "cenar", "acostarse"] },
+            { "type": "fill-blank", "sentences": [
+              { "sentence": "Por la mañana ___ a las siete.", "answer": "me levanto", "distractors": ["me acuesto", "ceno", "almuerzo"], "hint": "Wake up in morning", "feedback": "'Me levanto' = I wake up / get up." }
+            ] },
+            { "type": "dialogue", "scene": "daily-routine" }
+          ]
+        },
+        {
+          "id": "ciudad-4",
+          "name": "Hablar, comer, vivir",
+          "description": "Regular verb conjugation",
+          "vocab": ["hablar", "comer", "vivir", "trabajar", "estudiar", "leer", "escribir", "correr", "abrir", "beber"],
+          "exercises": [
+            { "type": "flashcard", "items": ["hablar", "comer", "vivir", "trabajar", "estudiar", "leer"] },
+            { "type": "match", "words": ["hablar", "comer", "vivir", "trabajar", "leer", "escribir"] },
+            { "type": "fill-blank", "sentences": [
+              { "sentence": "Yo ___ español.", "answer": "hablo", "distractors": ["habla", "hablas", "hablamos"], "hint": "1st person -ar verb", "feedback": "Yo + hablar = hablo." },
+              { "sentence": "Ella ___ pizza.", "answer": "come", "distractors": ["como", "comes", "comemos"], "hint": "3rd person -er verb", "feedback": "Ella + comer = come." }
+            ] }
+          ]
+        },
+        {
+          "id": "ciudad-5",
+          "name": "En la ciudad",
+          "description": "Places in a city",
+          "vocab": ["hospital", "escuela", "banco", "restaurante", "parque", "iglesia", "biblioteca", "farmacia", "correos", "museo"],
+          "exercises": [
+            { "type": "flashcard", "items": ["hospital", "escuela", "banco", "restaurante", "parque", "biblioteca"] },
+            { "type": "match", "words": ["hospital", "escuela", "banco", "restaurante", "parque", "museo"] },
+            { "type": "fill-blank", "sentences": [
+              { "sentence": "Voy al ___ para sacar dinero.", "answer": "banco", "distractors": ["parque", "museo", "hospital"], "hint": "Money", "feedback": "Bank = banco." }
+            ] }
+          ]
+        },
+        {
+          "id": "ciudad-6",
+          "name": "Vamos a...",
+          "description": "Making future plans (ir + a)",
+          "vocab": ["voy_a", "vas_a", "va_a", "vamos_a", "van_a", "después", "luego", "esta_noche", "fin_de_semana"],
+          "exercises": [
+            { "type": "flashcard", "items": ["voy_a", "vas_a", "va_a", "vamos_a", "después", "luego"] },
+            { "type": "match", "words": ["voy_a", "vas_a", "vamos_a", "después", "luego", "esta_noche"] },
+            { "type": "fill-blank", "sentences": [
+              { "sentence": "Mañana ___ a estudiar mucho.", "answer": "voy", "distractors": ["va", "vas", "van"], "hint": "I'm going to (yo)", "feedback": "Yo + ir = voy. 'Voy a estudiar' = I'm going to study." }
+            ] }
+          ]
+        },
+        {
+          "id": "ciudad-7",
+          "name": "¿Aló?",
+          "description": "Phone conversations",
+          "vocab": ["llamar", "mensaje", "teléfono", "número", "contestar", "colgar", "mandar", "recibir"],
+          "exercises": [
+            { "type": "flashcard", "items": ["llamar", "mensaje", "teléfono", "número", "contestar", "mandar"] },
+            { "type": "match", "words": ["llamar", "mensaje", "teléfono", "contestar", "mandar", "recibir"] },
+            { "type": "fill-blank", "sentences": [
+              { "sentence": "Te ___ esta noche.", "answer": "llamo", "distractors": ["mando", "recibo", "cuelgo"], "hint": "I'll call you", "feedback": "'Te llamo' = I'll call you." }
+            ] },
+            { "type": "dialogue", "scene": "phone-call" }
+          ]
+        },
+        {
+          "id": "ciudad-8",
+          "name": "City Boss",
+          "description": "Navigate the city!",
+          "isBoss": true,
+          "timeLimit": 120,
+          "vocab": ["izquierda", "derecha", "autobús", "tren", "hablar", "comer", "voy_a", "llamar", "banco", "parque"],
+          "exercises": []
+        }
+      ]
+    },
+    {
+      "id": "viaje",
+      "name": "El Viaje",
+      "description": "The journey — travel, past tense, storytelling",
+      "cefr": "A2",
+      "icon": "✈",
+      "levels": [
+        {
+          "id": "viaje-1",
+          "name": "El viajero",
+          "description": "Travel vocabulary",
+          "vocab": ["viaje", "maleta", "pasaporte", "aeropuerto", "hotel", "reserva", "habitación", "playa", "montaña", "mapa"],
+          "exercises": [
+            { "type": "flashcard", "items": ["viaje", "maleta", "pasaporte", "aeropuerto", "hotel", "habitación"] },
+            { "type": "match", "words": ["viaje", "maleta", "pasaporte", "hotel", "playa", "mapa"] },
+            { "type": "fill-blank", "sentences": [
+              { "sentence": "Necesito mi ___ para viajar.", "answer": "pasaporte", "distractors": ["maleta", "mapa", "boleto"], "hint": "ID for travel", "feedback": "Pasaporte = passport." }
+            ] }
+          ]
+        },
+        {
+          "id": "viaje-2",
+          "name": "Ayer...",
+          "description": "Past tense (preterite regular)",
+          "vocab": ["hablé", "comí", "viví", "trabajé", "estudié", "compré", "vendí", "abrí", "llegué", "salí"],
+          "exercises": [
+            { "type": "flashcard", "items": ["hablé", "comí", "viví", "trabajé", "compré", "llegué"] },
+            { "type": "match", "words": ["hablé", "comí", "viví", "compré", "llegué", "salí"] },
+            { "type": "fill-blank", "sentences": [
+              { "sentence": "Ayer ___ pizza.", "answer": "comí", "distractors": ["como", "comeré", "comía"], "hint": "I ate (preterite)", "feedback": "Ayer (yesterday) needs preterite — comí." },
+              { "sentence": "Anoche ___ con María.", "answer": "hablé", "distractors": ["hablo", "hablaré", "hablas"], "hint": "I spoke (preterite)", "feedback": "Anoche (last night) needs preterite — hablé." }
+            ] }
+          ]
+        },
+        {
+          "id": "viaje-3",
+          "name": "La semana pasada",
+          "description": "Telling stories",
+          "vocab": ["ayer", "anteayer", "la_semana_pasada", "el_mes_pasado", "el_año_pasado", "primero", "entonces", "finalmente"],
+          "exercises": [
+            { "type": "flashcard", "items": ["ayer", "la_semana_pasada", "el_año_pasado", "primero", "entonces", "finalmente"] },
+            { "type": "match", "words": ["ayer", "la_semana_pasada", "el_año_pasado", "primero", "entonces", "finalmente"] },
+            { "type": "fill-blank", "sentences": [
+              { "sentence": "Primero comí, ___ salí.", "answer": "entonces", "distractors": ["finalmente", "primero", "ayer"], "hint": "Then", "feedback": "Primero (first) ... entonces (then) ... finalmente (finally)." }
+            ] }
+          ]
+        },
+        {
+          "id": "viaje-4",
+          "name": "Fui, tuve, hice",
+          "description": "Irregular preterite",
+          "vocab": ["fui", "fue", "tuve", "tuvo", "hice", "hizo", "dije", "dijo", "puse", "puso"],
+          "exercises": [
+            { "type": "flashcard", "items": ["fui", "fue", "tuve", "tuvo", "hice", "dije"] },
+            { "type": "match", "words": ["fui", "tuve", "hice", "dije", "fue", "tuvo"] },
+            { "type": "fill-blank", "sentences": [
+              { "sentence": "Ayer ___ a la playa.", "answer": "fui", "distractors": ["voy", "iré", "iba"], "hint": "I went (preterite)", "feedback": "'Fui' = I went (irregular preterite of ir)." },
+              { "sentence": "Ella ___ la cena.", "answer": "hizo", "distractors": ["hace", "hará", "hacía"], "hint": "She made/did", "feedback": "'Hizo' = he/she did or made." }
+            ] }
+          ]
+        },
+        {
+          "id": "viaje-5",
+          "name": "En el hotel",
+          "description": "Hotel and restaurant scenarios",
+          "vocab": ["reservar", "registrarse", "llave", "toalla", "menú", "cuenta", "propina", "mesero", "recepción", "ascensor"],
+          "exercises": [
+            { "type": "flashcard", "items": ["reservar", "llave", "toalla", "menú", "cuenta", "mesero"] },
+            { "type": "match", "words": ["reservar", "llave", "toalla", "menú", "cuenta", "propina"] },
+            { "type": "fill-blank", "sentences": [
+              { "sentence": "La ___, por favor.", "answer": "cuenta", "distractors": ["llave", "propina", "toalla"], "hint": "Restaurant: 'the bill'", "feedback": "'La cuenta' = the bill." }
+            ] },
+            { "type": "dialogue", "scene": "hotel-checkin" }
+          ]
+        },
+        {
+          "id": "viaje-6",
+          "name": "Más grande que",
+          "description": "Comparing things",
+          "vocab": ["más", "menos", "mejor", "peor", "mayor", "menor", "tan", "como", "el_más", "la_más"],
+          "exercises": [
+            { "type": "flashcard", "items": ["más", "menos", "mejor", "peor", "tan", "como"] },
+            { "type": "match", "words": ["más", "menos", "mejor", "peor", "mayor", "menor"] },
+            { "type": "fill-blank", "sentences": [
+              { "sentence": "Madrid es ___ grande que Toledo.", "answer": "más", "distractors": ["menos", "tan", "muy"], "hint": "More than", "feedback": "'Más X que Y' = more X than Y." },
+              { "sentence": "Tan alto ___ tú.", "answer": "como", "distractors": ["que", "más", "tan"], "hint": "As ... as", "feedback": "Equality: 'tan X como Y' = as X as Y." }
+            ] }
+          ]
+        },
+        {
+          "id": "viaje-7",
+          "name": "Me gusta",
+          "description": "Expressing opinions",
+          "vocab": ["gustar", "encantar", "interesar", "importar", "molestar", "parecer", "creer", "pensar", "opinar", "preferir"],
+          "exercises": [
+            { "type": "flashcard", "items": ["gustar", "encantar", "interesar", "molestar", "creer", "pensar"] },
+            { "type": "match", "words": ["gustar", "encantar", "creer", "pensar", "preferir", "molestar"] },
+            { "type": "fill-blank", "sentences": [
+              { "sentence": "Me ___ el café.", "answer": "gusta", "distractors": ["gustan", "gusto", "gustas"], "hint": "Singular noun", "feedback": "Me gusta + singular. Me gustan + plural." },
+              { "sentence": "Me ___ los libros.", "answer": "gustan", "distractors": ["gusta", "gusto", "gustas"], "hint": "Plural noun", "feedback": "Plural noun → gustan." }
+            ] }
+          ]
+        },
+        {
+          "id": "viaje-8",
+          "name": "Travel Boss",
+          "description": "Tell your travel story!",
+          "isBoss": true,
+          "timeLimit": 150,
+          "vocab": ["viaje", "hotel", "ayer", "fui", "tuve", "primero", "más", "gustar", "comí", "habité"],
+          "exercises": []
+        }
+      ]
+    },
+    {
+      "id": "fiesta",
+      "name": "La Fiesta",
+      "description": "The party — complex conversations and culture",
+      "cefr": "B1",
+      "icon": "🎉",
+      "levels": [
+        {
+          "id": "fiesta-1",
+          "name": "Cuando era niño",
+          "description": "The imperfect tense",
+          "vocab": ["era", "tenía", "vivía", "jugaba", "comía", "iba", "hacía", "decía", "veía", "sabía"],
+          "exercises": [
+            { "type": "flashcard", "items": ["era", "tenía", "vivía", "jugaba", "iba", "hacía"] },
+            { "type": "match", "words": ["era", "tenía", "vivía", "jugaba", "iba", "hacía"] },
+            { "type": "fill-blank", "sentences": [
+              { "sentence": "Cuando ___ niño, jugaba mucho.", "answer": "era", "distractors": ["soy", "fui", "estaba"], "hint": "Imperfect of ser", "feedback": "Imperfect describes ongoing/habitual past — era." },
+              { "sentence": "Antes ___ en Madrid.", "answer": "vivía", "distractors": ["vivo", "viví", "viviré"], "hint": "Used to live", "feedback": "Past habitual = imperfect (vivía)." }
+            ] }
+          ]
+        },
+        {
+          "id": "fiesta-2",
+          "name": "Estaba lloviendo",
+          "description": "Preterite vs. imperfect",
+          "vocab": ["mientras", "cuando", "siempre", "a_veces", "un_día", "de_repente", "todavía", "ya", "nunca", "cada_vez"],
+          "exercises": [
+            { "type": "flashcard", "items": ["mientras", "cuando", "siempre", "de_repente", "todavía", "ya"] },
+            { "type": "match", "words": ["mientras", "siempre", "a_veces", "de_repente", "todavía", "nunca"] },
+            { "type": "fill-blank", "sentences": [
+              { "sentence": "___ comía, sonó el teléfono.", "answer": "Mientras", "distractors": ["Cuando", "Siempre", "Ya"], "hint": "Two simultaneous past actions", "feedback": "'Mientras + imperfect' for ongoing background action." }
+            ] }
+          ]
+        },
+        {
+          "id": "fiesta-3",
+          "name": "Voy a ser",
+          "description": "Future plans",
+          "vocab": ["seré", "tendré", "haré", "iré", "diré", "podré", "sabré", "querré", "vendré", "saldré"],
+          "exercises": [
+            { "type": "flashcard", "items": ["seré", "tendré", "haré", "iré", "diré", "podré"] },
+            { "type": "match", "words": ["seré", "tendré", "haré", "iré", "podré", "sabré"] },
+            { "type": "fill-blank", "sentences": [
+              { "sentence": "Mañana ___ médico (yo).", "answer": "seré", "distractors": ["soy", "fui", "era"], "hint": "I will be (future)", "feedback": "Future tense — yo seré." }
+            ] },
+            { "type": "dialogue", "scene": "future-plans" }
+          ]
+        },
+        {
+          "id": "fiesta-4",
+          "name": "Deberías...",
+          "description": "Giving advice",
+          "vocab": ["debería", "podría", "tendría_que", "es_mejor", "es_importante", "te_recomiendo", "te_sugiero", "hay_que", "es_necesario", "conviene"],
+          "exercises": [
+            { "type": "flashcard", "items": ["debería", "podría", "es_mejor", "es_importante", "te_recomiendo", "hay_que"] },
+            { "type": "match", "words": ["debería", "podría", "es_mejor", "te_recomiendo", "hay_que", "conviene"] },
+            { "type": "fill-blank", "sentences": [
+              { "sentence": "Tú ___ estudiar más.", "answer": "deberías", "distractors": ["debería", "debo", "debe"], "hint": "You should (tú)", "feedback": "Tú + deber → deberías. (1st person yo = debería.)" }
+            ] }
+          ]
+        },
+        {
+          "id": "fiesta-5",
+          "name": "Ojalá que",
+          "description": "Subjunctive introduction",
+          "vocab": ["quiero_que", "espero_que", "ojalá_que", "es_posible_que", "dudo_que", "necesito_que", "pido_que", "sugiero_que", "prefiero_que", "deseo_que"],
+          "exercises": [
+            { "type": "flashcard", "items": ["quiero_que", "espero_que", "ojalá_que", "dudo_que", "necesito_que", "es_posible_que"] },
+            { "type": "match", "words": ["quiero_que", "espero_que", "ojalá_que", "dudo_que", "necesito_que", "prefiero_que"] },
+            { "type": "fill-blank", "sentences": [
+              { "sentence": "___ que vengas mañana.", "answer": "Espero", "distractors": ["Sé", "Tengo", "Voy"], "hint": "I hope that...", "feedback": "'Espero que + subjunctive' for hopes." }
+            ] }
+          ]
+        },
+        {
+          "id": "fiesta-6",
+          "name": "¿Qué opinas?",
+          "description": "Debating topics",
+          "vocab": ["estar_de_acuerdo", "no_estar_de_acuerdo", "en_mi_opinión", "por_un_lado", "por_otro_lado", "sin_embargo", "además", "por_ejemplo", "en_conclusión", "es_verdad_que"],
+          "exercises": [
+            { "type": "flashcard", "items": ["estar_de_acuerdo", "en_mi_opinión", "sin_embargo", "además", "por_ejemplo", "en_conclusión"] },
+            { "type": "match", "words": ["estar_de_acuerdo", "en_mi_opinión", "sin_embargo", "además", "por_ejemplo", "en_conclusión"] },
+            { "type": "fill-blank", "sentences": [
+              { "sentence": "Es bueno; ___, es caro.", "answer": "sin embargo", "distractors": ["además", "por ejemplo", "primero"], "hint": "But/however", "feedback": "'Sin embargo' = however — connects contrasting ideas." }
+            ] },
+            { "type": "dialogue", "scene": "debate-topic" }
+          ]
+        },
+        {
+          "id": "fiesta-7",
+          "name": "¡Qué chévere!",
+          "description": "Idioms and slang",
+          "vocab": ["chévere", "genial", "vale", "tío", "guay", "mola", "qué_onda", "no_manches", "dale", "está_padre"],
+          "exercises": [
+            { "type": "flashcard", "items": ["chévere", "genial", "vale", "guay", "qué_onda", "está_padre"] },
+            { "type": "match", "words": ["chévere", "genial", "vale", "guay", "qué_onda", "no_manches"] },
+            { "type": "fill-blank", "sentences": [
+              { "sentence": "—Quedamos a las ocho. —___.", "answer": "Vale", "distractors": ["Mola", "Onda", "Padre"], "hint": "Spain: OK", "feedback": "'Vale' is the most common 'okay' in Spain." }
+            ] }
+          ]
+        },
+        {
+          "id": "fiesta-8",
+          "name": "FINAL BOSS: La Fiesta Grande",
+          "description": "The ultimate Spanish challenge!",
+          "isBoss": true,
+          "timeLimit": 180,
+          "vocab": ["era", "mientras", "seré", "debería", "ojalá_que", "espero_que", "en_mi_opinión", "sin_embargo", "chévere", "vale"],
+          "exercises": []
+        }
+      ]
+    }
+  ]
+}
