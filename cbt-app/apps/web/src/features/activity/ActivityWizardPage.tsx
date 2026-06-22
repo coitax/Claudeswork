@@ -12,7 +12,14 @@ import { ActivityDayEditor } from '@/components/ActivityDayEditor';
 import { AutosaveIndicator } from '@/components/AutosaveIndicator';
 import { WeeklyActivityGrid } from '@/components/WeeklyActivityGrid';
 import { useAutosave } from '@/lib/use-autosave';
-import { buildEmptyWeek, defaultWeekStart } from './activity-model';
+import {
+  applyTimeGrid,
+  buildEmptyWeek,
+  DEFAULT_TIME_GRID,
+  defaultWeekStart,
+  inferTimeGrid,
+  type TimeGridConfig,
+} from './activity-model';
 
 const cfg = worksheetConfigs['activity-monitoring-form'];
 
@@ -20,6 +27,7 @@ export function ActivityWizardPage() {
   const { weekId } = useParams();
   const navigate = useNavigate();
   const [data, setData] = useState<ActivityWeekInput>(() => buildEmptyWeek(defaultWeekStart()));
+  const [grid, setGrid] = useState<TimeGridConfig>(DEFAULT_TIME_GRID);
   const [id, setId] = useState<string | null>(weekId ?? null);
   const [step, setStep] = useState(0);
   const [loaded, setLoaded] = useState(!weekId);
@@ -35,10 +43,18 @@ export function ActivityWizardPage() {
         is_draft: w.is_draft,
         days: w.days,
       });
+      setGrid(inferTimeGrid(w.days));
       setId(w.id);
       setLoaded(true);
     });
   }, [weekId]);
+
+  // Apply a new time grid (re-labels/resizes slots, preserving entered text).
+  function updateGrid(patch: Partial<TimeGridConfig>) {
+    const next = { ...grid, ...patch };
+    setGrid(next);
+    setData((prev) => ({ ...prev, days: applyTimeGrid(prev.days, next) }));
+  }
 
   const persist = useCallback(
     async (payload: ActivityWeekInput) => {
@@ -142,11 +158,70 @@ export function ActivityWizardPage() {
             </label>
             <textarea
               id="notes"
-              className="field-input"
+              className="field-input mb-6"
               rows={3}
               value={data.notes ?? ''}
               onChange={(e) => setData((p) => ({ ...p, notes: e.target.value || null }))}
             />
+
+            <fieldset className="rounded-md border border-accent-soft p-4">
+              <legend className="px-1 text-sm font-medium text-ink-soft">Time slots</legend>
+              <p className="prompt-text mb-3">
+                The worksheet starts at 8:00 A.M., but you can set your own start time and interval
+                (e.g. 4:30 A.M. in 1-hour steps). Activities you’ve already entered are kept.
+              </p>
+              <div className="grid gap-3 sm:grid-cols-3">
+                <div>
+                  <label className="field-label" htmlFor="grid_start">
+                    Start time
+                  </label>
+                  <input
+                    id="grid_start"
+                    type="time"
+                    className="field-input"
+                    value={grid.startTime}
+                    onChange={(e) => updateGrid({ startTime: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <label className="field-label" htmlFor="grid_interval">
+                    Interval
+                  </label>
+                  <select
+                    id="grid_interval"
+                    className="field-input"
+                    value={grid.intervalMinutes}
+                    onChange={(e) => updateGrid({ intervalMinutes: Number(e.target.value) })}
+                  >
+                    <option value={30}>30 minutes</option>
+                    <option value={60}>1 hour</option>
+                    <option value={90}>1.5 hours</option>
+                    <option value={120}>2 hours</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="field-label" htmlFor="grid_count">
+                    Number of slots
+                  </label>
+                  <input
+                    id="grid_count"
+                    type="number"
+                    min={1}
+                    max={48}
+                    className="field-input"
+                    value={grid.slotCount}
+                    onChange={(e) =>
+                      updateGrid({ slotCount: Math.max(1, Math.min(48, Number(e.target.value) || 1)) })
+                    }
+                  />
+                </div>
+              </div>
+              <p className="mt-3 text-xs text-ink-faint">
+                Preview: {data.days[0]?.slots[0]?.time_label} …{' '}
+                {data.days[0]?.slots[data.days[0].slots.length - 1]?.time_label} (
+                {data.days[0]?.slots.length} slots)
+              </p>
+            </fieldset>
           </WizardStep>
         )}
 
