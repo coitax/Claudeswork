@@ -1,0 +1,33 @@
+# dependencies
+node_modules/
+.pnpm-store/
+
+# build output
+dist/
+build/
+*.tsbuildinfo
+
+# env
+.env
+.env.local
+
+# private user data (NEVER commit real CBT data) — keep folders, ignore contents
+data/users/*
+data/sessions/*
+data/activity-weeks/*
+data/thought-records/*
+data/daily-moods/*
+data/emotion-selections/*
+data/meta/*
+data/templates/*
+!data/**/.gitkeep
+
+# logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# editor / os
+.vscode/
+.idea/
+.DS_Store

@@ -1,0 +1,113 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  @apply bg-paper text-ink antialiased;
+}
+
+/* Calm focus ring for keyboard users. */
+:focus-visible {
+  outline: 2px solid theme('colors.accent.DEFAULT');
+  outline-offset: 2px;
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium
+      transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent
+      disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-primary {
+    @apply btn bg-accent text-white hover:bg-ink-soft;
+  }
+  .btn-secondary {
+    @apply btn bg-accent-soft text-ink hover:bg-accent/20;
+  }
+  .btn-ghost {
+    @apply btn text-ink-soft hover:bg-accent-soft;
+  }
+  .card {
+    @apply rounded-lg border border-accent-soft bg-card p-5 shadow-sm;
+  }
+  .field-label {
+    @apply block text-sm font-medium text-ink-soft mb-1;
+  }
+  .field-input {
+    @apply w-full rounded-md border border-accent-soft bg-white px-3 py-2 text-ink
+      placeholder:text-ink-faint focus:border-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent;
+  }
+  .field-error {
+    @apply mt-1 text-sm text-red-700;
+  }
+  .prompt-text {
+    @apply text-sm text-ink-soft leading-relaxed;
+  }
+}
+
+/* ----------------------------------------------------------------------------
+   PRINT STYLES (v1 uses browser print CSS only — no PDF library)
+   - hide app chrome (nav, buttons) via .no-print
+   - high-contrast black on white
+   - sensible margins and page breaks
+   - weekly activity grid prints as a real table
+---------------------------------------------------------------------------- */
+@media print {
+  @page {
+    margin: 1.5cm;
+  }
+
+  body {
+    background: #fff !important;
+    color: #000 !important;
+    font-size: 11pt;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  .print-page {
+    box-shadow: none !important;
+    border: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: none !important;
+  }
+
+  .print-break {
+    break-before: page;
+  }
+
+  .print-avoid-break {
+    break-inside: avoid;
+  }
+
+  /* Worksheet sections keep their heading with content. */
+  .worksheet-section {
+    break-inside: avoid;
+  }
+
+  .activity-grid,
+  .activity-grid th,
+  .activity-grid td {
+    border: 1px solid #000 !important;
+    border-collapse: collapse;
+  }
+
+  a[href]::after {
+    content: '';
+  }
+}
+
+.print-only {
+  display: none;
+}
