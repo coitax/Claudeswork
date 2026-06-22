@@ -169,6 +169,37 @@ pnpm dev
 
 Run individually: `pnpm dev:api` / `pnpm dev:web`. Type-check: `pnpm typecheck`.
 
+### Testing on your phone
+
+In dev, your phone only needs to reach the **web server on port 5173** — Vite
+proxies `/api` to the backend internally, and dev-mode cookies are not `Secure`,
+so login works over plain HTTP. Pick one:
+
+**A) Same Wi-Fi (LAN).**
+1. Run `pnpm dev` on your computer.
+2. Find your machine's LAN IP (`ipconfig` on Windows → IPv4, or `ip addr` on Linux).
+3. On your phone (same Wi-Fi), open `http://<your-ip>:5173`.
+
+> **WSL2 note:** other devices can't reach a WSL2 service by default. Easiest fix
+> (Windows 11): add to `C:\Users\<you>\.wslconfig`
+> ```
+> [wsl2]
+> networkingMode=mirrored
+> ```
+> then `wsl --shutdown` and reopen. Alternatively forward the port from Windows:
+> `netsh interface portproxy add v4tov4 listenport=5173 listenaddress=0.0.0.0 connectport=5173 connectaddress=$(wsl hostname -I)`
+> and allow port 5173 through Windows Firewall.
+
+**B) From anywhere (HTTPS tunnel) — most reliable, also works on cellular.**
+Install [cloudflared](https://developers.cloudflare.com/cloudflare-tunnel/) (or ngrok), then:
+```bash
+pnpm dev                                   # in one terminal
+VITE_ALLOWED_HOSTS=true pnpm dev:web        # OR restart web with this so the tunnel host is allowed
+cloudflared tunnel --url http://localhost:5173
+```
+Open the printed `https://<random>.trycloudflare.com` URL on your phone. (Set
+`VITE_ALLOWED_HOSTS` to the exact tunnel hostname for a tighter allowlist.)
+
 ### Production (single VPS)
 
 ```bash
