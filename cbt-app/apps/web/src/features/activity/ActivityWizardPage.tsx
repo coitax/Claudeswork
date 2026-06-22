@@ -30,7 +30,7 @@ export function ActivityWizardPage() {
   const [grid, setGrid] = useState<TimeGridConfig>(DEFAULT_TIME_GRID);
   const [id, setId] = useState<string | null>(weekId ?? null);
   const [step, setStep] = useState(0);
-  const [loaded, setLoaded] = useState(!weekId);
+  const [loaded, setLoaded] = useState(false);
 
   // Load existing week for edit.
   useEffect(() => {
@@ -47,6 +47,24 @@ export function ActivityWizardPage() {
       setId(w.id);
       setLoaded(true);
     });
+  }, [weekId]);
+
+  // New week: default the time grid to the most recently edited week ("last
+  // used schedule"), falling back to the worksheet default if there is none.
+  useEffect(() => {
+    if (weekId) return;
+    api
+      .get<{ items: ActivityWeek[] }>('/api/activity-weeks')
+      .then((r) => {
+        const last = [...r.items].sort((a, b) => b.updated_at.localeCompare(a.updated_at))[0];
+        const g = last ? inferTimeGrid(last.days) : DEFAULT_TIME_GRID;
+        setGrid(g);
+        setData(buildEmptyWeek(defaultWeekStart(), g));
+      })
+      .catch(() => {
+        /* keep defaults */
+      })
+      .finally(() => setLoaded(true));
   }, [weekId]);
 
   // Apply a new time grid (re-labels/resizes slots, preserving entered text).
@@ -167,8 +185,9 @@ export function ActivityWizardPage() {
             <fieldset className="rounded-md border border-accent-soft p-4">
               <legend className="px-1 text-sm font-medium text-ink-soft">Time slots</legend>
               <p className="prompt-text mb-3">
-                The worksheet starts at 8:00 A.M., but you can set your own start time and interval
-                (e.g. 4:30 A.M. in 1-hour steps). Activities you’ve already entered are kept.
+                Pre-filled from your most recent week (the worksheet default is 8:00 A.M. if you have
+                none yet). Adjust the start time and interval as needed (e.g. 4:30 A.M. in 1-hour
+                steps). Activities you’ve already entered are kept.
               </p>
               <div className="grid gap-3 sm:grid-cols-3">
                 <div>
