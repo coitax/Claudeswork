@@ -85,10 +85,10 @@ export function ThoughtRecordWizardPage() {
   return (
     <div>
       <div className="no-print mb-4 flex items-center justify-between">
-        <h1 className="text-xl font-semibold text-ink">{one.title}</h1>
+        <h1 className="text-xl font-semibold text-ink">Thought Record</h1>
         <AutosaveIndicator status={status} />
       </div>
-      {one.instructions && <p className="no-print prompt-text mb-4">{one.instructions}</p>}
+      {one.instructions && <p className="no-print prompt-text mb-4 whitespace-pre-line">{one.instructions}</p>}
 
       <WizardLayout
         steps={STEPS}
@@ -122,7 +122,7 @@ export function ThoughtRecordWizardPage() {
       >
         {step === 0 && (
           <WizardStep title="Date/Time">
-            <WorksheetField field={fieldOr(one, 'date_time', 'Date/Time')} htmlFor="date_time">
+            <WorksheetField field={fieldOr(two, 'date_time', 'Date/time')} htmlFor="date_time">
               <input
                 id="date_time"
                 type="datetime-local"
@@ -146,7 +146,7 @@ export function ThoughtRecordWizardPage() {
 
         {step === 1 && (
           <WizardStep title="Situation">
-            <WorksheetField field={fieldOr(one, 'situation_text', 'Situation')} htmlFor="situation">
+            <WorksheetField field={fieldOr(two, 'situation_text', 'Situation')} htmlFor="situation">
               <textarea
                 id="situation"
                 rows={5}
@@ -160,7 +160,7 @@ export function ThoughtRecordWizardPage() {
 
         {step === 2 && (
           <WizardStep title="Automatic Thought(s)">
-            <WorksheetField field={fieldOr(one, 'automatic_thoughts_text', 'Automatic Thought(s)')} htmlFor="at">
+            <WorksheetField field={fieldOr(two, 'automatic_thoughts_text', 'Automatic Thought(s)')} htmlFor="at">
               <textarea
                 id="at"
                 rows={5}
@@ -170,7 +170,7 @@ export function ThoughtRecordWizardPage() {
               />
             </WorksheetField>
             <PercentField
-              field={fieldOr(one, 'automatic_thoughts_belief_percent', 'Belief (0-100%)')}
+              field={fieldOr(two, 'automatic_thoughts_belief_percent', 'Belief (0-100%)')}
               value={data.automatic_thoughts_belief_percent}
               onChange={(v) => set('automatic_thoughts_belief_percent', v)}
             />
@@ -179,7 +179,7 @@ export function ThoughtRecordWizardPage() {
 
         {step === 3 && (
           <WizardStep title="Emotion(s)">
-            <WorksheetField field={fieldOr(one, 'emotions_text', 'Emotion(s)')} htmlFor="emo">
+            <WorksheetField field={fieldOr(two, 'emotions_text', 'Emotion(s)')} htmlFor="emo">
               <textarea
                 id="emo"
                 rows={3}
@@ -192,7 +192,7 @@ export function ThoughtRecordWizardPage() {
               </div>
             </WorksheetField>
             <PercentField
-              field={fieldOr(one, 'emotions_intensity_percent', 'Intensity (0-100%)')}
+              field={fieldOr(two, 'emotions_intensity_percent', 'Intensity (0-100%)')}
               value={data.emotions_intensity_percent}
               onChange={(v) => set('emotions_intensity_percent', v)}
             />

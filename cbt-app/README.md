@@ -5,11 +5,12 @@ data, stored as JSON files on disk. Runs locally in WSL and can later be moved t
 a single Linode VPS. Built for **simplicity, maintainability, and future
 adaptability** (notably a clean path to SQLite).
 
-> ⚠️ **Worksheet fidelity notice.** This app digitizes worksheet-based CBT
-> homework. The source worksheet **images were not available** when the app was
-> scaffolded, so all worksheet wording is **candidate text flagged for manual
-> review**. Confirm/correct it in **Settings → Worksheet text review** before
-> relying on it. See [Worksheet text that needs review](#9-worksheet-text-that-needs-manual-review).
+> ⚠️ **Worksheet fidelity notice.** Worksheet wording has been transcribed
+> **verbatim from the source images** (Beck Institute Thought Record sides one &
+> two, an Activity Monitoring Form, and a 7-core Feelings Wheel) via OCR. Two
+> items where the source was not fully legible remain flagged for manual review
+> in **Settings → Worksheet text review**. See
+> [Worksheet text that needs review](#9-worksheet-text-that-needs-manual-review).
 
 ---
 
@@ -195,26 +196,32 @@ NODE_ENV=production PORT=5174 pnpm start
 
 ## 9. Worksheet text that needs manual review
 
-**The source worksheet images were not provided to the build.** Therefore the
-exact wording of the following could not be faithfully reproduced and is marked
-`review_needed` (candidate text only). Each is seeded into the in-app review
-screen (**Settings → Worksheet text review**) and listed in each config's
-`review_needed` array:
+Worksheet wording was transcribed **verbatim from the source images** (provided
+via Google Drive) into the configs in `packages/shared/src/worksheets/`:
 
-- **Activity Monitoring Form** — title, instructions, the **P/M** column meaning
-  (assumed *Pleasure/Mastery*), the exact time-slot labels (assumed 8:00 A.M.–
-  9:00 P.M.), and the *Overall Mood (0-10)* row label.
-- **Thought Record (side one & two)** — title, instructions, and the exact
-  prompts for Situation, Automatic Thought(s), Emotion(s), Adaptive Response, and
-  Outcome, plus the belief/intensity scales.
-- **Cognitive Distortions list** — the names and descriptions (Beck/Burns-style
-  candidates) must be confirmed against the source.
-- **Feelings Wheel** — the primary/secondary/tertiary emotion terms and hierarchy
-  are candidate data (optional helper content only).
+- **Activity Monitoring Form** — title, full instructions, P = pleasure /
+  M = mastery/accomplishment (0-10 each), time slots 8:00 A.M.–9:00 P.M., and the
+  *Overall Mood (0-10)* row. Fully transcribed.
+- **Thought Record Side One** — banner + instructions + the 12-item Cognitive
+  Distortions list with verbatim examples.
+- **Thought Record Side Two** — Date/time, Situation, Automatic Thought(s),
+  Emotion(s), Adaptive Response (incl. the alternative-response questions), and
+  Outcome prompts, verbatim.
+- **Feelings Wheel** — 7-core Geoffrey Roberts wheel (Happy, Sad, Disgusted,
+  Angry, Fearful, Bad, Surprised) with secondary/tertiary terms (helper only).
 
-To finalize: open each source image, then in the review screen **Confirm** or
-**Correct** each item. For prompt wording, edit the corresponding config in
-`packages/shared/src/worksheets/` so the wizard/print views match exactly.
+**Two items remain flagged** (seeded into the in-app review screen) where the
+photo was not fully legible:
+
+1. `thought-record-side-one / instructions_numbering` — instruction step
+   numbering was partly obscured; confirm the exact numbers/order.
+2. `feelings-wheel-reference / bad_tertiary` — some tertiary terms in the "Bad"
+   segment were not clearly readable; confirm against the image.
+
+The "Magnification/minimization" distortion example also carries a
+`review_needed` flag (one phrase was OCR-ambiguous). To finalize: re-check those
+against the originals, then **Confirm**/**Correct** in the review screen and/or
+edit the config wording directly.
 
 ---
 

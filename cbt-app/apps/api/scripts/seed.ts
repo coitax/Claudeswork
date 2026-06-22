@@ -38,8 +38,13 @@ async function prompt(question: string, opts?: { hidden?: boolean }): Promise<st
 async function main(): Promise<void> {
   await storage.init();
 
+  // Non-interactive mode: if username + password come from env, never prompt
+  // (email is optional and defaults to null when CBT_EMAIL is unset).
+  const nonInteractive = Boolean(process.env.CBT_USERNAME && process.env.CBT_PASSWORD);
+
   const username = process.env.CBT_USERNAME ?? (await prompt('Username: '));
-  const emailRaw = process.env.CBT_EMAIL ?? (await prompt('Email (optional, blank to skip): '));
+  const emailRaw =
+    process.env.CBT_EMAIL ?? (nonInteractive ? '' : await prompt('Email (optional, blank to skip): '));
   const email = emailRaw.trim() ? emailRaw.trim() : null;
   const password = process.env.CBT_PASSWORD ?? (await prompt('Password: ', { hidden: true }));
 

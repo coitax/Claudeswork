@@ -3,17 +3,14 @@ import type { WorksheetConfig } from '../types/worksheet-config.js';
 /**
  * Activity Monitoring Form worksheet config.
  *
- * !!! SOURCE TEXT REVIEW REQUIRED !!!
- * The source worksheet image was NOT available when this config was authored.
- * All title / instruction / column / scale wording below is CANDIDATE text based
- * on a standard CBT Activity Monitoring (Activity Schedule) worksheet and MUST
- * be confirmed against the real document before relying on it. Every uncertain
- * string is also listed in `review_needed` and seeded into the review screen.
+ * Source: photographed worksheet "ACTIVITY MONITORING FORM" (transcribed from
+ * the user's image via OCR, 2026-06). Wording below is taken verbatim from the
+ * source. Per the fidelity rule, do not paraphrase this text.
  */
 
 const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-/** Time slots, 8:00 A.M. through 9:00 P.M. (one row each). */
+/** Time slots, 8:00 A.M. through 9:00 P.M. (one row each) — verbatim from source. */
 export const ACTIVITY_TIME_SLOTS = [
   '8:00 A.M.',
   '9:00 A.M.',
@@ -33,23 +30,21 @@ export const ACTIVITY_TIME_SLOTS = [
 
 export const activityMonitoringForm: WorksheetConfig = {
   key: 'activity-monitoring-form',
-  version: 1,
-  // CANDIDATE — confirm exact title from source image.
-  title: 'Activity Monitoring Form',
-  // CANDIDATE — confirm exact instructions from source image.
+  version: 2,
+  title: 'ACTIVITY MONITORING FORM',
+  // Verbatim from the worksheet image.
   instructions:
-    'Record what you do during each time period for each day of the week. '
-    + 'For each activity, rate it for P (Pleasure) and M (Mastery). '
-    + 'At the end of each day, rate your Overall Mood (0-10).',
+    'Instructions: Please list the activities you did on each day of the week, whatever it may '
+    + 'have been. Below each activity, rate the degree of pleasure (P) and mastery/accomplishment '
+    + '(M) on a 0-10 scale for each, where 0 is no pleasure or mastery/accomplishment and 10 is the '
+    + 'greatest degree of pleasure or mastery/accomplishment. Please also rate your overall mood for '
+    + 'the entire day on a scale of 0-10, where 0 is feeling the worst you could imagine feeling and '
+    + '10 is feeling the best you could imagine feeling.',
   sections: [
     {
       key: 'week_meta',
       fields: [
-        {
-          field_key: 'week_start_date',
-          field_type: 'date',
-          label: 'Week starting',
-        },
+        { field_key: 'week_start_date', field_type: 'date', label: 'Week starting' },
         { field_key: 'title', field_type: 'text', label: 'Title (optional)' },
         { field_key: 'notes', field_type: 'textarea', label: 'Notes (optional)' },
       ],
@@ -63,29 +58,26 @@ export const activityMonitoringForm: WorksheetConfig = {
           field_type: 'grid',
           label: 'Days',
           options: DAYS,
-          review_needed: true,
         },
         {
           field_key: 'time_slots',
           field_type: 'grid',
           label: 'Time',
           options: [...ACTIVITY_TIME_SLOTS],
-          review_needed: true,
         },
         {
           field_key: 'pm_rating_text',
           field_type: 'text',
           label: 'P / M',
-          // CANDIDATE — exact meaning/wording of the P/M column unconfirmed.
-          prompt_text: 'P / M',
-          review_needed: true,
+          // Verbatim intent from the instructions; combined field for v1.
+          prompt_text:
+            'Rate the degree of pleasure (P) and mastery/accomplishment (M) on a 0-10 scale for each.',
         },
         {
           field_key: 'overall_mood_0_10',
           field_type: 'scale',
           label: 'Overall Mood (0-10)',
           scale: { min: 0, max: 10, label: 'Overall Mood (0-10)' },
-          review_needed: true,
         },
       ],
     },
@@ -97,32 +89,6 @@ export const activityMonitoringForm: WorksheetConfig = {
       mood_row: 'Overall Mood (0-10)',
     },
   },
-  review_needed: [
-    {
-      field_key: 'title',
-      extracted_text: 'Activity Monitoring Form',
-      notes: 'Confirm exact worksheet title from source image.',
-    },
-    {
-      field_key: 'instructions',
-      extracted_text:
-        'Record what you do during each time period... rate P (Pleasure) and M (Mastery)... Overall Mood (0-10).',
-      notes: 'Confirm exact instruction wording and whether P/M stands for Pleasure/Mastery.',
-    },
-    {
-      field_key: 'pm_rating_text',
-      extracted_text: 'P / M',
-      notes: 'Confirm the exact column header and rating scale used for the P/M field.',
-    },
-    {
-      field_key: 'time_slots',
-      extracted_text: ACTIVITY_TIME_SLOTS.join(', '),
-      notes: 'Confirm the exact time labels and whether the range is 8:00 A.M.-9:00 P.M.',
-    },
-    {
-      field_key: 'overall_mood_0_10',
-      extracted_text: 'Overall Mood (0-10)',
-      notes: 'Confirm the exact final-row label and scale range.',
-    },
-  ],
+  // Source text confirmed from the worksheet image — no items pending review.
+  review_needed: [],
 };

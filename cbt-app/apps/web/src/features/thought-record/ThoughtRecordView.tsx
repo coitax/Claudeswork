@@ -1,7 +1,6 @@
 import { worksheetConfigs, type ThoughtRecord } from '@cbt/shared';
 import { fieldOr } from '@/lib/worksheet-helpers';
 
-const one = worksheetConfigs['thought-record-side-one']!;
 const two = worksheetConfigs['thought-record-side-two']!;
 
 function Row({ label, value }: { label: string; value: string | number | null }) {
@@ -20,21 +19,21 @@ export function ThoughtRecordView({ record }: { record: ThoughtRecord }) {
   return (
     <div>
       <Row
-        label={fieldOr(one, 'date_time', 'Date/Time').label}
+        label={fieldOr(two, 'date_time', 'Date/time').label}
         value={record.date_time ? new Date(record.date_time).toLocaleString() : null}
       />
-      <Row label={fieldOr(one, 'situation_text', 'Situation').label} value={record.situation_text} />
+      <Row label={fieldOr(two, 'situation_text', 'Situation').label} value={record.situation_text} />
       <Row
-        label={fieldOr(one, 'automatic_thoughts_text', 'Automatic Thought(s)').label}
+        label={fieldOr(two, 'automatic_thoughts_text', 'Automatic Thought(s)').label}
         value={record.automatic_thoughts_text}
       />
       <Row
-        label={fieldOr(one, 'automatic_thoughts_belief_percent', 'Belief %').label}
+        label={fieldOr(two, 'automatic_thoughts_belief_percent', 'Belief %').label}
         value={record.automatic_thoughts_belief_percent}
       />
-      <Row label={fieldOr(one, 'emotions_text', 'Emotion(s)').label} value={record.emotions_text} />
+      <Row label={fieldOr(two, 'emotions_text', 'Emotion(s)').label} value={record.emotions_text} />
       <Row
-        label={fieldOr(one, 'emotions_intensity_percent', 'Intensity %').label}
+        label={fieldOr(two, 'emotions_intensity_percent', 'Intensity %').label}
         value={record.emotions_intensity_percent}
       />
       <Row

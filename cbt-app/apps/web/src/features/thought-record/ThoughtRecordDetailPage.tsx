@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { worksheetConfigs, type ThoughtRecord } from '@cbt/shared';
+import type { ThoughtRecord } from '@cbt/shared';
 import { api } from '@/lib/api';
 import { PageHeader } from '@/components/common';
 import { ThoughtRecordView } from './ThoughtRecordView';
@@ -18,7 +18,7 @@ export function ThoughtRecordDetailPage() {
   return (
     <div>
       <PageHeader
-        title={record.title || worksheetConfigs['thought-record-side-one']!.title}
+        title={record.title || 'Thought Record'}
         description={record.is_draft ? 'Draft' : undefined}
         actions={
           <>
