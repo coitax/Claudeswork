@@ -48,16 +48,19 @@ export interface StorageAdapter {
   getActivityWeeks(opts?: ListOptions): Promise<ActivityWeek[]>;
   getActivityWeekById(id: string): Promise<ActivityWeek | null>;
   saveActivityWeek(week: ActivityWeek): Promise<ActivityWeek>;
+  deleteActivityWeek(id: string): Promise<void>;
 
   // --- Thought records ---
   getThoughtRecords(opts?: ListOptions): Promise<ThoughtRecord[]>;
   getThoughtRecordById(id: string): Promise<ThoughtRecord | null>;
   saveThoughtRecord(record: ThoughtRecord): Promise<ThoughtRecord>;
+  deleteThoughtRecord(id: string): Promise<void>;
 
   // --- Daily moods ---
   getDailyMoods(opts?: ListOptions): Promise<DailyMood[]>;
   getDailyMoodById(id: string): Promise<DailyMood | null>;
   saveDailyMood(mood: DailyMood): Promise<DailyMood>;
+  deleteDailyMood(id: string): Promise<void>;
 
   // --- Emotion selections (attached to a parent record) ---
   getEmotionSelections(parentType: string, parentId: string): Promise<EmotionSelection[]>;

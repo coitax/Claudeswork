@@ -78,6 +78,9 @@ export class SqliteStorageAdapter implements StorageAdapter {
   saveActivityWeek(_week: ActivityWeek): Promise<ActivityWeek> {
     return this.notImplemented('saveActivityWeek');
   }
+  deleteActivityWeek(_id: string): Promise<void> {
+    return this.notImplemented('deleteActivityWeek');
+  }
   getThoughtRecords(_opts?: ListOptions): Promise<ThoughtRecord[]> {
     return this.notImplemented('getThoughtRecords');
   }
@@ -87,6 +90,9 @@ export class SqliteStorageAdapter implements StorageAdapter {
   saveThoughtRecord(_record: ThoughtRecord): Promise<ThoughtRecord> {
     return this.notImplemented('saveThoughtRecord');
   }
+  deleteThoughtRecord(_id: string): Promise<void> {
+    return this.notImplemented('deleteThoughtRecord');
+  }
   getDailyMoods(_opts?: ListOptions): Promise<DailyMood[]> {
     return this.notImplemented('getDailyMoods');
   }
@@ -95,6 +101,9 @@ export class SqliteStorageAdapter implements StorageAdapter {
   }
   saveDailyMood(_mood: DailyMood): Promise<DailyMood> {
     return this.notImplemented('saveDailyMood');
+  }
+  deleteDailyMood(_id: string): Promise<void> {
+    return this.notImplemented('deleteDailyMood');
   }
   getEmotionSelections(_parentType: string, _parentId: string): Promise<EmotionSelection[]> {
     return this.notImplemented('getEmotionSelections');

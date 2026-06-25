@@ -212,6 +212,43 @@ export class FileStorageAdapter implements StorageAdapter {
     return mood;
   }
 
+  // --- delete helpers ---
+
+  private async deleteEmotionSelectionsForParent(parentType: string, parentId: string): Promise<void> {
+    const items = await this.listJson<EmotionSelection>('emotion-selections');
+    await Promise.all(
+      items
+        .filter((e) => e.parent_type === parentType && e.parent_id === parentId)
+        .map((e) => fs.rm(this.dir('emotion-selections', `emotion-${e.id}.json`), { force: true })),
+    );
+  }
+
+  private async rmByIdInDir(subdir: string, id: string): Promise<void> {
+    let names: string[];
+    try { names = await fs.readdir(this.dir(subdir)); }
+    catch (err) { if ((err as NodeJS.ErrnoException).code === 'ENOENT') return; throw err; }
+    for (const n of names.filter((n) => n.endsWith('.json') && !n.endsWith('.tmp'))) {
+      const rec = await this.readJson<{ id: string }>(this.dir(subdir, n));
+      if (rec?.id === id) await fs.rm(this.dir(subdir, n), { force: true });
+    }
+  }
+
+  async deleteActivityWeek(id: string): Promise<void> {
+    await this.rmByIdInDir('activity-weeks', id);
+    await this.deleteEmotionSelectionsForParent('activity_week', id);
+    await fs.rm(this.dir('photos', id), { recursive: true, force: true });
+  }
+
+  async deleteThoughtRecord(id: string): Promise<void> {
+    await fs.rm(this.dir('thought-records', `thought-record-${id}.json`), { force: true });
+    await this.deleteEmotionSelectionsForParent('thought_record', id);
+  }
+
+  async deleteDailyMood(id: string): Promise<void> {
+    await this.rmByIdInDir('daily-moods', id);
+    await this.deleteEmotionSelectionsForParent('daily_mood', id);
+  }
+
   // --- emotion selections ---
 
   async getEmotionSelections(parentType: string, parentId: string): Promise<EmotionSelection[]> {
