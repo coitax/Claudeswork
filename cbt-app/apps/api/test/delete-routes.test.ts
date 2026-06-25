@@ -1,0 +1,20 @@
+import { describe, it, expect } from 'vitest';
+import { makeApp } from './helpers.js';
+
+describe('DELETE record routes', () => {
+  it('deletes an owned activity week (204) and 404s afterward', async () => {
+    const { app, storage, cookie } = await makeApp();
+    const now = new Date(0).toISOString();
+    await storage.saveActivityWeek({ id: 'w1', user_id: 'u1', week_start_date: '2026-01-04', title: null, notes: null, is_draft: true, days: [], created_at: now, updated_at: now } as any);
+    const del = await app.inject({ method: 'DELETE', url: '/api/activity-weeks/w1', headers: { cookie } });
+    expect(del.statusCode).toBe(204);
+    const again = await app.inject({ method: 'DELETE', url: '/api/activity-weeks/w1', headers: { cookie } });
+    expect(again.statusCode).toBe(404);
+  });
+
+  it('401 without a session cookie', async () => {
+    const { app } = await makeApp();
+    const res = await app.inject({ method: 'DELETE', url: '/api/activity-weeks/anything' });
+    expect(res.statusCode).toBe(401);
+  });
+});

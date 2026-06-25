@@ -32,6 +32,12 @@ export async function activityRoutes(app: FastifyInstance): Promise<void> {
     return reply.send(week);
   });
 
+  app.delete<{ Params: { id: string } }>('/api/activity-weeks/:id', async (req, reply) => {
+    const ok = await services.activity.delete(req.currentUser!.id, req.params.id);
+    if (!ok) return reply.code(404).send({ error: 'not_found' });
+    return reply.code(204).send();
+  });
+
   app.get<{ Params: { id: string } }>('/api/activity-weeks/:id/print-data', async (req, reply) => {
     const week = await services.activity.get(req.currentUser!.id, req.params.id);
     if (!week) return reply.code(404).send({ error: 'not_found' });

@@ -32,6 +32,12 @@ export async function dailyMoodRoutes(app: FastifyInstance): Promise<void> {
     return reply.send(mood);
   });
 
+  app.delete<{ Params: { id: string } }>('/api/daily-moods/:id', async (req, reply) => {
+    const ok = await services.dailyMood.delete(req.currentUser!.id, req.params.id);
+    if (!ok) return reply.code(404).send({ error: 'not_found' });
+    return reply.code(204).send();
+  });
+
   app.get<{ Params: { id: string } }>('/api/daily-moods/:id/print-data', async (req, reply) => {
     const mood = await services.dailyMood.get(req.currentUser!.id, req.params.id);
     if (!mood) return reply.code(404).send({ error: 'not_found' });
