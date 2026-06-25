@@ -35,3 +35,16 @@ export const api = {
   put: <T>(path: string, body?: unknown) => request<T>('PUT', path, body),
   del: <T>(path: string) => request<T>('DELETE', path),
 };
+
+import type { ActivityPhoto } from '@cbt/shared';
+
+export async function uploadPhoto(weekId: string, file: File): Promise<ActivityPhoto> {
+  const form = new FormData();
+  form.append('file', file);
+  const res = await fetch(`/api/activity-weeks/${weekId}/photos`, { method: 'POST', body: form, credentials: 'same-origin' });
+  if (!res.ok) {
+    const data = await res.json().catch(() => null);
+    throw new ApiError(res.status, (data as { error?: string })?.error ?? res.statusText);
+  }
+  return res.json() as Promise<ActivityPhoto>;
+}
