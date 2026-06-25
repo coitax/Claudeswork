@@ -43,8 +43,8 @@ export async function uploadPhoto(weekId: string, file: File): Promise<ActivityP
   form.append('file', file);
   const res = await fetch(`/api/activity-weeks/${weekId}/photos`, { method: 'POST', body: form, credentials: 'same-origin' });
   if (!res.ok) {
-    const data = await res.json().catch(() => null);
-    throw new ApiError(res.status, (data as { error?: string })?.error ?? res.statusText);
+    const data = await res.json().catch(() => null) as { error?: string; message?: string } | null;
+    throw new ApiError(res.status, data?.message ?? data?.error ?? res.statusText);
   }
   return res.json() as Promise<ActivityPhoto>;
 }

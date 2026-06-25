@@ -18,7 +18,7 @@ export async function activityPhotoRoutes(app: FastifyInstance): Promise<void> {
     } catch (err: unknown) {
       const code = (err as { code?: string }).code;
       if (code === 'FST_REQ_FILE_TOO_LARGE') return reply.code(413).send({ error: 'file_too_large' });
-      if (code === 'FST_FILES_LIMIT') return reply.code(415).send({ error: 'too_many_files' });
+      if (code === 'FST_FILES_LIMIT') return reply.code(400).send({ error: 'too_many_files' });
       throw err;
     }
     if (!data) return reply.code(400).send({ error: 'no_file' });
