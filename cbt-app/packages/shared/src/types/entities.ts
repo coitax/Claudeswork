@@ -55,6 +55,14 @@ export interface ActivityDay {
   overall_mood_0_10: number | null;
 }
 
+export interface ActivityPhoto {
+  id: string;
+  filename: string;   // original upload name
+  mime: string;       // image/jpeg | image/png | image/webp
+  size: number;       // bytes
+  created_at: IsoTimestamp;
+}
+
 export interface ActivityWeek {
   id: string;
   user_id: string;
@@ -65,6 +73,8 @@ export interface ActivityWeek {
   is_draft: boolean;
   /** Always 7 day objects, Sunday .. Saturday. */
   days: ActivityDay[];
+  /** Attached handwritten-journal photos (optional; defaults to [] for legacy records). */
+  photos?: ActivityPhoto[];
   created_at: IsoTimestamp;
   updated_at: IsoTimestamp;
 }
