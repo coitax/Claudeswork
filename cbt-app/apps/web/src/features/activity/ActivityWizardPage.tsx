@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
   activityWeekInputSchema,
+  copyDaySlots,
   worksheetConfigs,
   type ActivityWeek,
   type ActivityWeekInput,
@@ -100,6 +101,30 @@ export function ActivityWizardPage() {
 
   function setDay(index: number, day: ActivityWeekInput['days'][number]) {
     setData((prev) => ({ ...prev, days: prev.days.map((d, i) => (i === index ? day : d)) }));
+  }
+
+  const [copyTargets, setCopyTargets] = useState<number[]>([]);
+
+  function copyDayToDays(sourceIdx: number, targetIdxs: number[]) {
+    setData((prev) => {
+      const source = prev.days[sourceIdx];
+      if (!source) return prev;
+      const targetDays = targetIdxs.map((i) => prev.days[i]).filter((d): d is NonNullable<typeof d> => d != null);
+      const copied = copyDaySlots(source, targetDays);
+      const days = prev.days.map((d, i) => {
+        const pos = targetIdxs.indexOf(i);
+        return pos === -1 || copied[pos] == null ? d : copied[pos]!;
+      });
+      return { ...prev, days };
+    });
+  }
+
+  function applyCopy(currentDayIdx: number) {
+    if (copyTargets.length === 0) return;
+    const hasContent = copyTargets.some((i) => data.days[i]?.slots.some((s) => s.activity_text));
+    if (hasContent && !window.confirm('Overwrite the selected days\' activities?')) return;
+    copyDayToDays(currentDayIdx, copyTargets);
+    setCopyTargets([]);
   }
 
   async function finish() {
@@ -247,6 +272,17 @@ export function ActivityWizardPage() {
         {isDayStep && (
           <WizardStep title={`${data.days[dayIndex]?.day_of_week} entries`}>
             <ActivityDayEditor day={data.days[dayIndex]!} onChange={(d) => setDay(dayIndex, d)} />
+            <div className="mt-2 flex flex-wrap items-center gap-2 text-sm">
+              <span>Copy this day to:</span>
+              {data.days.map((d, i) => i === dayIndex ? null : (
+                <label key={d.day_of_week} className="flex items-center gap-1">
+                  <input type="checkbox" checked={copyTargets.includes(i)}
+                    onChange={(e) => setCopyTargets((p) => e.target.checked ? [...p, i] : p.filter((x) => x !== i))} />
+                  {d.day_of_week.slice(0, 3)}
+                </label>
+              ))}
+              <button type="button" className="btn-secondary" onClick={() => applyCopy(dayIndex)}>Apply</button>
+            </div>
           </WizardStep>
         )}
 
