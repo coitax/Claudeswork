@@ -25,7 +25,15 @@ export async function activityPhotoRoutes(app: FastifyInstance): Promise<void> {
     if (!ALLOWED_PHOTO_MIME.has(data.mimetype)) {
       return reply.code(415).send({ error: 'unsupported_media_type', message: 'Only JPEG, PNG, or WEBP are allowed (HEIC is not supported).' });
     }
-    const buf = await data.toBuffer();
+    let buf: Buffer;
+    try {
+      buf = await data.toBuffer();
+    } catch (err: unknown) {
+      if ((err as { code?: string }).code === 'FST_REQ_FILE_TOO_LARGE') {
+        return reply.code(413).send({ error: 'file_too_large', message: 'Image exceeds the 10MB limit.' });
+      }
+      throw err;
+    }
     const ext = extForMime(data.mimetype)!;
     const photo: ActivityPhoto = {
       id: randomUUID(), filename: data.filename, mime: data.mimetype, size: buf.length,
