@@ -5,3 +5,4 @@ export * from './storage/storage-adapter.js';
 export * from './zod/schemas.js';
 export * from './worksheets/index.js';
 export * from './export/csv.js';
+export * from './activity/fill.js';
