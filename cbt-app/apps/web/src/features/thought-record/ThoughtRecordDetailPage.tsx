@@ -19,8 +19,12 @@ export function ThoughtRecordDetailPage() {
   if (!record) return <p className="text-ink-faint">Loading…</p>;
 
   async function handleDelete() {
-    await api.del(`/api/thought-records/${record!.id}`);
-    navigate('/app/thought-records');
+    try {
+      await api.del(`/api/thought-records/${record!.id}`);
+      navigate('/app/thought-records');
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Delete failed');
+    }
   }
 
   return (

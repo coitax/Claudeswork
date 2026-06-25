@@ -18,8 +18,12 @@ export function DailyMoodDetailPage() {
   if (!mood) return <p className="text-ink-faint">Loading…</p>;
 
   async function handleDelete() {
-    await api.del(`/api/daily-moods/${mood!.id}`);
-    navigate('/app/daily-mood');
+    try {
+      await api.del(`/api/daily-moods/${mood!.id}`);
+      navigate('/app/daily-mood');
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Delete failed');
+    }
   }
 
   return (

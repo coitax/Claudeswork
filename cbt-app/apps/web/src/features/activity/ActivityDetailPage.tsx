@@ -19,8 +19,12 @@ export function ActivityDetailPage() {
   if (!week) return <p className="text-ink-faint">Loading…</p>;
 
   async function handleDelete() {
-    await api.del(`/api/activity-weeks/${week!.id}`);
-    navigate('/app/activity');
+    try {
+      await api.del(`/api/activity-weeks/${week!.id}`);
+      navigate('/app/activity');
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Delete failed');
+    }
   }
 
   return (

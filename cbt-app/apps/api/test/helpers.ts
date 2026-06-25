@@ -1,11 +1,13 @@
 import { mkdtemp } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { vi } from 'vitest';
 
 export async function makeApp() {
   const dataDir = await mkdtemp(join(tmpdir(), 'cbt-api-'));
   process.env.DATA_DIR = dataDir;
   process.env.NODE_ENV = 'test';
+  vi.resetModules();
   const { buildApp } = await import('../src/app.js');
   const { storage } = await import('../src/storage/index.js');
   await storage.init();
