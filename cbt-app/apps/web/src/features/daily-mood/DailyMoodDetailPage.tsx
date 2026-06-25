@@ -1,18 +1,26 @@
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import type { DailyMood } from '@cbt/shared';
 import { api } from '@/lib/api';
 import { PageHeader } from '@/components/common';
+import { ConfirmDialog } from '@/components/ConfirmDialog';
 
 export function DailyMoodDetailPage() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [mood, setMood] = useState<DailyMood | null>(null);
+  const [confirming, setConfirming] = useState(false);
 
   useEffect(() => {
     if (id) api.get<DailyMood>(`/api/daily-moods/${id}`).then(setMood);
   }, [id]);
 
   if (!mood) return <p className="text-ink-faint">Loading…</p>;
+
+  async function handleDelete() {
+    await api.del(`/api/daily-moods/${mood!.id}`);
+    navigate('/app/daily-mood');
+  }
 
   return (
     <div>
@@ -26,6 +34,7 @@ export function DailyMoodDetailPage() {
             <Link to={`/app/daily-mood/${mood.id}/print`} className="btn-primary">
               Print
             </Link>
+            <button className="btn-ghost" onClick={() => setConfirming(true)}>Delete</button>
           </>
         }
       />
@@ -53,6 +62,14 @@ export function DailyMoodDetailPage() {
           </p>
         )}
       </div>
+      <ConfirmDialog
+        open={confirming}
+        title="Delete this daily mood entry?"
+        message="This can't be undone."
+        confirmLabel="Delete"
+        onConfirm={() => { setConfirming(false); void handleDelete(); }}
+        onCancel={() => setConfirming(false)}
+      />
     </div>
   );
 }
