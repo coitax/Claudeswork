@@ -28,6 +28,12 @@ describe('fillSlotRange', () => {
     const out = fillSlotRange(d, '08:00', '09:00', 'Work', 'P3/M2');
     expect(out.slots.every((s) => s.pm_rating_text === 'P3/M2')).toBe(true);
   });
+
+  it('handles reversed start/end labels (by slot order)', () => {
+    const d = day([['08:00', null, null], ['09:00', null, null], ['10:00', null, null]]);
+    const out = fillSlotRange(d, '10:00', '08:00', 'Work');
+    expect(out.slots.map((s) => s.activity_text)).toEqual(['Work', 'Work', 'Work']);
+  });
 });
 
 describe('copyDaySlots', () => {

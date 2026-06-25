@@ -109,12 +109,12 @@ export function ActivityWizardPage() {
     setData((prev) => {
       const source = prev.days[sourceIdx];
       if (!source) return prev;
-      const targetDays = targetIdxs.map((i) => prev.days[i]).filter((d): d is NonNullable<typeof d> => d != null);
-      const copied = copyDaySlots(source, targetDays);
-      const days = prev.days.map((d, i) => {
-        const pos = targetIdxs.indexOf(i);
-        return pos === -1 || copied[pos] == null ? d : copied[pos]!;
+      const copiedByIdx = new Map<number, (typeof prev.days)[number]>();
+      targetIdxs.forEach((i) => {
+        const t = prev.days[i];
+        if (t) copiedByIdx.set(i, copyDaySlots(source, [t])[0]!);
       });
+      const days = prev.days.map((d, i) => copiedByIdx.get(i) ?? d);
       return { ...prev, days };
     });
   }
