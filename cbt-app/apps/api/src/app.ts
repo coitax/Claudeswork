@@ -2,10 +2,12 @@ import path from 'node:path';
 import { existsSync } from 'node:fs';
 import Fastify, { type FastifyInstance } from 'fastify';
 import cookie from '@fastify/cookie';
+import multipart from '@fastify/multipart';
 import fastifyStatic from '@fastify/static';
 import { config } from './config.js';
 import { authRoutes } from './routes/auth-routes.js';
 import { activityRoutes } from './routes/activity-routes.js';
+import { activityPhotoRoutes } from './routes/activity-photo-routes.js';
 import { thoughtRecordRoutes } from './routes/thought-record-routes.js';
 import { dailyMoodRoutes } from './routes/daily-mood-routes.js';
 import { worksheetRoutes } from './routes/worksheet-routes.js';
@@ -18,10 +20,12 @@ export async function buildApp(): Promise<FastifyInstance> {
   });
 
   await app.register(cookie);
+  await app.register(multipart, { limits: { fileSize: 10 * 1024 * 1024, files: 1 } });
 
   // API routes
   await app.register(authRoutes);
   await app.register(activityRoutes);
+  await app.register(activityPhotoRoutes);
   await app.register(thoughtRecordRoutes);
   await app.register(dailyMoodRoutes);
   await app.register(worksheetRoutes);

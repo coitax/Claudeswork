@@ -1,4 +1,4 @@
-import type { ActivityWeek, ActivityWeekInput, StorageAdapter } from '@cbt/shared';
+import type { ActivityWeek, ActivityWeekInput, ActivityPhoto, StorageAdapter } from '@cbt/shared';
 import { newId, nowIso } from './util.js';
 
 /**
@@ -39,6 +39,23 @@ export class ActivityService {
     if (!week || week.user_id !== userId) return false;
     await this.storage.deleteActivityWeek(id);
     return true;
+  }
+
+  async addPhoto(userId: string, weekId: string, photo: ActivityPhoto): Promise<ActivityWeek | null> {
+    const week = await this.get(userId, weekId);
+    if (!week) return null;
+    const updated: ActivityWeek = { ...week, photos: [...(week.photos ?? []), photo], updated_at: nowIso() };
+    return this.storage.saveActivityWeek(updated);
+  }
+
+  async removePhoto(userId: string, weekId: string, photoId: string): Promise<ActivityPhoto | null> {
+    const week = await this.get(userId, weekId);
+    if (!week) return null;
+    const photo = (week.photos ?? []).find((p) => p.id === photoId);
+    if (!photo) return null;
+    const updated: ActivityWeek = { ...week, photos: (week.photos ?? []).filter((p) => p.id !== photoId), updated_at: nowIso() };
+    await this.storage.saveActivityWeek(updated);
+    return photo;
   }
 
   async update(userId: string, id: string, input: ActivityWeekInput): Promise<ActivityWeek | null> {
