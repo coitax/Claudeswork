@@ -39,6 +39,13 @@ export class ThoughtRecordService {
     return this.storage.saveThoughtRecord(record);
   }
 
+  async delete(userId: string, id: string): Promise<boolean> {
+    const rec = await this.storage.getThoughtRecordById(id);
+    if (!rec || rec.user_id !== userId) return false;
+    await this.storage.deleteThoughtRecord(id);
+    return true;
+  }
+
   async update(userId: string, id: string, input: ThoughtRecordInput): Promise<ThoughtRecord | null> {
     const existing = await this.get(userId, id);
     if (!existing) return null;

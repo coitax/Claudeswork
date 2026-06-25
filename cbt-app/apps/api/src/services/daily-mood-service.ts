@@ -30,6 +30,13 @@ export class DailyMoodService {
     return this.storage.saveDailyMood(mood);
   }
 
+  async delete(userId: string, id: string): Promise<boolean> {
+    const mood = await this.storage.getDailyMoodById(id);
+    if (!mood || mood.user_id !== userId) return false;
+    await this.storage.deleteDailyMood(id);
+    return true;
+  }
+
   async update(userId: string, id: string, input: DailyMoodInput): Promise<DailyMood | null> {
     const existing = await this.get(userId, id);
     if (!existing) return null;

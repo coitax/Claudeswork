@@ -34,6 +34,13 @@ export class ActivityService {
     return this.storage.saveActivityWeek(week);
   }
 
+  async delete(userId: string, id: string): Promise<boolean> {
+    const week = await this.storage.getActivityWeekById(id);
+    if (!week || week.user_id !== userId) return false;
+    await this.storage.deleteActivityWeek(id);
+    return true;
+  }
+
   async update(userId: string, id: string, input: ActivityWeekInput): Promise<ActivityWeek | null> {
     const existing = await this.get(userId, id);
     if (!existing) return null;
