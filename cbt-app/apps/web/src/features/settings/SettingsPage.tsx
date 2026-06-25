@@ -24,6 +24,15 @@ export function SettingsPage() {
           Open worksheet review
         </Link>
       </div>
+      <div className="card mt-4">
+        <h2 className="font-semibold text-ink">Export data</h2>
+        <p className="mt-1 text-sm text-ink-soft">
+          Download your activity weeks, thought records, and daily moods as CSV files.
+        </p>
+        <Link to="/app/settings/export" className="btn-secondary mt-3">
+          Open export
+        </Link>
+      </div>
     </div>
   );
 }

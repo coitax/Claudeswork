@@ -9,6 +9,7 @@ import { activityRoutes } from './routes/activity-routes.js';
 import { thoughtRecordRoutes } from './routes/thought-record-routes.js';
 import { dailyMoodRoutes } from './routes/daily-mood-routes.js';
 import { worksheetRoutes } from './routes/worksheet-routes.js';
+import { exportRoutes } from './routes/export-routes.js';
 
 export async function buildApp(): Promise<FastifyInstance> {
   const app = Fastify({
@@ -24,6 +25,7 @@ export async function buildApp(): Promise<FastifyInstance> {
   await app.register(thoughtRecordRoutes);
   await app.register(dailyMoodRoutes);
   await app.register(worksheetRoutes);
+  await app.register(exportRoutes);
 
   app.get('/api/health', async () => ({ ok: true }));
 

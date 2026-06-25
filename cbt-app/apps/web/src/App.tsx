@@ -18,6 +18,7 @@ import { DailyMoodDetailPage } from '@/features/daily-mood/DailyMoodDetailPage';
 import { DailyMoodPrintPage } from '@/features/daily-mood/DailyMoodPrintPage';
 import { SettingsPage } from '@/features/settings/SettingsPage';
 import { WorksheetReviewPage } from '@/features/settings/WorksheetReviewPage';
+import { ExportPage } from '@/features/settings/ExportPage';
 
 export function App() {
   return (
@@ -52,6 +53,7 @@ export function App() {
 
               <Route path="settings" element={<SettingsPage />} />
               <Route path="settings/worksheet-review" element={<WorksheetReviewPage />} />
+              <Route path="settings/export" element={<ExportPage />} />
             </Route>
           </Route>
 
