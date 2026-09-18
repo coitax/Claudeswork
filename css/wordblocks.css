@@ -1,0 +1,324 @@
+/* Word Blocks (Palabra Drop) — arcade mode */
+
+#screen-arcade {
+  padding: 0.5rem;
+}
+
+#screen-arcade .wb-arcade-hud {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.3rem 0;
+}
+
+#wb-arena {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.wb-root {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  width: 100%;
+}
+
+/* HUD */
+.wb-hud {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.3rem 0.2rem;
+  font-size: 0.55rem;
+}
+
+.wb-hud-group {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.wb-hud-label {
+  color: var(--text-dim);
+  font-size: 0.45rem;
+}
+
+.wb-score {
+  color: var(--gold);
+}
+
+.wb-combo {
+  color: var(--blue);
+  font-size: 0.45rem;
+}
+
+.wb-combo.hot {
+  color: var(--accent-glow);
+  animation: wb-combo-pulse 0.6s ease infinite alternate;
+}
+
+.wb-level {
+  color: var(--purple);
+}
+
+.wb-level.wb-level-up {
+  color: var(--gold);
+  animation: wb-combo-pulse 0.3s ease 3 alternate;
+}
+
+.wb-progress {
+  width: 100%;
+  height: 8px;
+  background: var(--bg-mid);
+  border: var(--pixel-border) solid var(--gray);
+  image-rendering: pixelated;
+  margin-bottom: 0.4rem;
+}
+
+.wb-progress-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--green);
+  transition: width 0.3s ease;
+}
+
+/* Playfield */
+.wb-playfield {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--bg-mid);
+  border: var(--pixel-border) solid var(--bg-light);
+  contain: layout paint;
+}
+
+.wb-col-guide {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.wb-danger-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: rgba(239, 68, 68, 0.35);
+  pointer-events: none;
+}
+
+.wb-danger-line.wb-danger-flash {
+  animation: wb-danger 0.5s steps(2) infinite;
+}
+
+/* Blocks: outer div is positioned via translate3d only;
+   the inner div carries visuals + state animations */
+.wb-block {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 52px;
+  will-change: transform;
+  pointer-events: none;
+}
+
+.wb-block-inner {
+  width: 100%;
+  height: 100%;
+  padding: 2px 3px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  text-align: center;
+  overflow: hidden;
+  background: var(--bg-light);
+  border: var(--pixel-border) solid var(--blue);
+  box-shadow: inset 2px 2px 0 rgba(255, 255, 255, 0.12),
+    inset -2px -2px 0 rgba(0, 0, 0, 0.35);
+  image-rendering: pixelated;
+}
+
+.wb-block-es {
+  font-size: 0.45rem;
+  line-height: 1.35;
+  color: var(--white);
+  word-break: break-word;
+}
+
+.wb-block-en {
+  font-size: 0.38rem;
+  line-height: 1.3;
+  color: var(--gold);
+  word-break: break-word;
+}
+
+.wb-block.wb-new .wb-block-inner {
+  border-color: var(--gold);
+  background: #2a2450;
+}
+
+.wb-block.wb-active .wb-block-inner {
+  border-color: var(--green);
+  box-shadow: 0 0 6px rgba(74, 222, 128, 0.5),
+    inset 2px 2px 0 rgba(255, 255, 255, 0.12),
+    inset -2px -2px 0 rgba(0, 0, 0, 0.35);
+}
+
+.wb-block.wb-settled .wb-block-inner {
+  border-color: var(--gray);
+  background: var(--bg-dark);
+  opacity: 0.85;
+}
+
+.wb-block.wb-frozen .wb-block-inner {
+  border-color: var(--red);
+}
+
+.wb-block.wb-shake .wb-block-inner {
+  animation: wb-shake 0.3s ease;
+}
+
+.wb-block.wb-pop .wb-block-inner {
+  animation: wb-pop 0.32s ease forwards;
+}
+
+.wb-reveal {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  font-size: 0.42rem;
+  color: var(--red);
+  background: rgba(26, 26, 46, 0.92);
+  word-break: break-word;
+  animation: wb-reveal-flash 0.4s steps(2) 3;
+}
+
+/* Tray */
+.wb-tray {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem;
+  padding-top: 0.5rem;
+}
+
+.wb-option {
+  font-family: var(--font-main);
+  font-size: 0.5rem;
+  line-height: 1.4;
+  color: var(--text);
+  background: var(--bg-mid);
+  border: var(--pixel-border) solid var(--gray);
+  padding: 0.5rem 0.3rem;
+  min-height: 44px;
+  cursor: pointer;
+  image-rendering: pixelated;
+  text-align: center;
+  word-break: break-word;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.wb-option:hover, .wb-option:active {
+  background: var(--bg-light);
+  border-color: var(--white);
+}
+
+.wb-option:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.wb-option.wb-wrong-flash {
+  border-color: var(--red);
+  color: var(--red);
+  animation: wb-shake 0.3s ease;
+}
+
+/* Round-over overlay */
+.wb-over {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  background: rgba(26, 26, 46, 0.88);
+  z-index: 5;
+  animation: wb-over-in 0.3s ease;
+}
+
+.wb-over-title {
+  font-size: 0.8rem;
+  color: var(--gold);
+  text-shadow: 2px 2px 0 var(--gold-dark);
+  text-align: center;
+  padding: 0 0.5rem;
+}
+
+.wb-over-sub {
+  font-size: 0.5rem;
+  color: var(--text-dim);
+}
+
+/* Paused */
+.wb-root.wb-paused .wb-playfield::after {
+  content: 'PAUSED';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  color: var(--white);
+  background: rgba(26, 26, 46, 0.85);
+  z-index: 4;
+}
+
+/* Animations */
+@keyframes wb-pop {
+  0% { transform: scale(1); opacity: 1; }
+  40% { transform: scale(1.25); opacity: 1; }
+  100% { transform: scale(0); opacity: 0; }
+}
+
+@keyframes wb-shake {
+  0%, 100% { margin-left: 0; }
+  25% { margin-left: -4px; }
+  75% { margin-left: 4px; }
+}
+
+@keyframes wb-danger {
+  0% { background: rgba(239, 68, 68, 0.9); }
+  100% { background: rgba(239, 68, 68, 0.2); }
+}
+
+@keyframes wb-reveal-flash {
+  0% { opacity: 1; }
+  100% { opacity: 0.5; }
+}
+
+@keyframes wb-combo-pulse {
+  from { transform: scale(1); }
+  to { transform: scale(1.15); }
+}
+
+@keyframes wb-over-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (max-width: 360px) {
+  .wb-block-es { font-size: 0.42rem; }
+  .wb-option { font-size: 0.45rem; }
+}

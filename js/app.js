@@ -10,7 +10,14 @@ const App = (() => {
   let currentLevelIdx = null;
   let currentExerciseIdx = 0;
   let exerciseResults = { correct: 0, total: 0 };
+  let streetResults = { correct: 0, total: 0 };
   let previousScreen = 'screen-world-map';
+
+  const NPC_NAMES = ['María', 'Diego', 'Lucía', 'Carlos', 'Sofía', 'Miguel', 'Elena', 'Pablo'];
+
+  function primeVoice() {
+    if (typeof Voice !== 'undefined') Voice.prime();
+  }
 
   async function init() {
     try {
@@ -38,6 +45,8 @@ const App = (() => {
 
     if (player) {
       UI.el('btn-continue').style.display = 'block';
+      UI.el('btn-street').style.display = 'block';
+      UI.el('btn-arcade').style.display = 'block';
       const dueCards = SRS.getDueCards(Storage.getSRS());
       if (dueCards.length > 0) UI.el('btn-daily-review').style.display = 'block';
     }
@@ -52,11 +61,61 @@ const App = (() => {
   function bindEvents() {
     UI.el('btn-new-game').addEventListener('click', () => {
       Audio8Bit.select();
+      primeVoice();
       UI.show('screen-new-game', 'anim-slide-in');
     });
 
     UI.el('btn-continue').addEventListener('click', () => {
       Audio8Bit.select();
+      primeVoice();
+      enterWorldMap();
+    });
+
+    UI.el('btn-street').addEventListener('click', () => {
+      Audio8Bit.select();
+      primeVoice();
+      startStreetMode();
+    });
+
+    UI.el('btn-arcade').addEventListener('click', () => {
+      Audio8Bit.select();
+      primeVoice();
+      startArcade();
+    });
+
+    UI.el('btn-language').addEventListener('click', () => {
+      Audio8Bit.select();
+      showLanguageScreen();
+    });
+
+    UI.el('language-back-btn').addEventListener('click', () => {
+      Audio8Bit.select();
+      UI.show('screen-title', 'anim-slide-back');
+    });
+
+    UI.el('language-import-btn').addEventListener('click', () => {
+      Audio8Bit.select();
+      UI.show('screen-import', 'anim-slide-in');
+      Importer.render(UI.el('import-container'), {
+        onDone: (packId) => {
+          LangPack.setActiveId(packId);
+          location.reload();
+        },
+        onCancel: () => showLanguageScreen()
+      });
+    });
+
+    UI.el('btn-exit-street').addEventListener('click', () => {
+      Audio8Bit.select();
+      Adventure.stop();
+      if (typeof Voice !== 'undefined') Voice.stop();
+      UI.el('street-encounter').classList.remove('active');
+      enterWorldMap();
+    });
+
+    UI.el('btn-exit-arcade').addEventListener('click', () => {
+      Audio8Bit.select();
+      WordBlocks.stop();
       enterWorldMap();
     });
 
@@ -113,22 +172,29 @@ const App = (() => {
 
     UI.el('btn-exit-exercise').addEventListener('click', () => {
       Audio8Bit.select();
+      Exercises.cancelActive();
       enterLevelSelect(currentWorldId);
     });
 
     UI.el('btn-exit-review').addEventListener('click', () => {
       Audio8Bit.select();
+      Exercises.cancelActive();
       enterWorldMap();
     });
 
     UI.el('btn-results-continue').addEventListener('click', () => {
       Audio8Bit.select();
-      enterLevelSelect(currentWorldId);
+      if (currentWorldId) enterLevelSelect(currentWorldId);
+      else enterWorldMap();
     });
 
     UI.el('btn-results-retry').addEventListener('click', () => {
       Audio8Bit.select();
-      startLevel(currentWorldId, currentLevelIdx);
+      if (currentWorldId !== null && currentLevelIdx !== null) {
+        startLevel(currentWorldId, currentLevelIdx);
+      } else {
+        enterWorldMap();
+      }
     });
   }
 
@@ -344,23 +410,31 @@ const App = (() => {
   function finishLevel(isBoss) {
     const world = curriculum.worlds.find((w) => w.id === currentWorldId);
     const level = world.levels[currentLevelIdx];
-    const stars = Game.calculateStars(exerciseResults.correct, exerciseResults.total);
-    const xp = Game.calculateXP(exerciseResults.correct, exerciseResults.total, isBoss);
+    let stars = Game.calculateStars(exerciseResults.correct, exerciseResults.total);
+    if (!isBoss && player.hearts <= 0) stars = 0;
 
-    Game.completeLevel(player, currentWorldId, level.id, stars);
-    const xpResult = Game.awardXP(player, xp);
+    let xp = 0;
+    let xpResult = { leveledUp: false, newLevel: player.level, oldLevel: player.level };
 
-    // Award stats based on exercise types
-    const statAmount = Math.ceil(exerciseResults.correct / 2);
-    Game.awardStat(player, 'vocabulario', statAmount);
-    Game.awardStat(player, 'gramatica', Math.ceil(statAmount * 0.8));
-    Game.awardStat(player, 'conversacion', Math.ceil(statAmount * 0.6));
-    Game.awardStat(player, 'escucha', Math.ceil(statAmount * 0.4));
+    // Failed runs (0 stars) earn nothing — no completion, XP, stats or SRS
+    if (stars > 0) {
+      xp = Game.calculateXP(exerciseResults.correct, exerciseResults.total, isBoss);
 
-    // Add vocab to SRS
-    const srsData = Storage.getSRS();
-    (level.vocab || []).forEach((word) => SRS.initWord(srsData, word));
-    Storage.saveSRS(srsData);
+      Game.completeLevel(player, currentWorldId, level.id, stars);
+      xpResult = Game.awardXP(player, xp);
+
+      // Award stats based on exercise types
+      const statAmount = Math.ceil(exerciseResults.correct / 2);
+      Game.awardStat(player, 'vocabulario', statAmount);
+      Game.awardStat(player, 'gramatica', Math.ceil(statAmount * 0.8));
+      Game.awardStat(player, 'conversacion', Math.ceil(statAmount * 0.6));
+      Game.awardStat(player, 'escucha', Math.ceil(statAmount * 0.4));
+
+      // Add vocab to SRS
+      const srsData = Storage.getSRS();
+      (level.vocab || []).forEach((word) => SRS.initWord(srsData, word));
+      Storage.saveSRS(srsData);
+    }
 
     // Update streak
     Game.updateStreak();
@@ -413,8 +487,16 @@ const App = (() => {
     const masteredCount = Object.values(srsData).filter((c) => c.repetition >= 3).length;
     const completedLevels = Object.keys(player.completedLevels).length;
     const threeStarCount = Object.values(player.completedLevels).filter((s) => s >= 3).length;
-    const bossCount = Object.keys(player.completedLevels).filter((k) => k.endsWith('-8')).length;
-    const reviewCount = Storage.get('review_count', 0);
+
+    // Count defeated bosses from the curriculum, not from level-id shape
+    let bossCount = 0;
+    curriculum.worlds.forEach((w) => {
+      w.levels.forEach((lv) => {
+        if (lv.isBoss && (player.completedLevels[w.id + ':' + lv.id] || 0) > 0) bossCount++;
+      });
+    });
+
+    const reviewCount = Storage.get(Storage.nsKey('review_count'), 0);
 
     achievementDefs.forEach((ach) => {
       if (unlocked.includes(ach.id)) return;
@@ -427,9 +509,11 @@ const App = (() => {
         case 'streak': earned = streak.count >= c.count; break;
         case 'vocab_mastered': earned = masteredCount >= c.count; break;
         case 'bosses_defeated': earned = bossCount >= c.count; break;
-        case 'world_complete':
-          earned = (player.worldProgress[c.world] || 0) >= 8;
+        case 'world_complete': {
+          const targetWorld = curriculum.worlds.find((w) => w.id === c.world);
+          earned = !!targetWorld && (player.worldProgress[c.world] || 0) >= targetWorld.levels.length;
           break;
+        }
         case 'player_level': earned = player.level >= c.count; break;
         case 'total_xp': earned = player.xp >= c.count; break;
         case 'reviews_completed': earned = reviewCount >= c.count; break;
@@ -554,8 +638,8 @@ const App = (() => {
 
     const words = dueCards.map((c) => c.word);
     Exercises.renderFlashcard(UI.el('review-area'), words, () => {
-      const count = Storage.get('review_count', 0);
-      Storage.set('review_count', count + 1);
+      const count = Storage.get(Storage.nsKey('review_count'), 0);
+      Storage.set(Storage.nsKey('review_count'), count + 1);
       Game.updateStreak();
       Game.awardXP(player, words.length * 5);
       checkAchievements(false);
@@ -564,6 +648,210 @@ const App = (() => {
   }
 
   document.addEventListener('DOMContentLoaded', init);
+
+  // ---------- Street Mode (Adventure) ----------
+
+  function getStreetWorld() {
+    let target = curriculum.worlds[0];
+    curriculum.worlds.forEach((w) => {
+      if (Game.isWorldUnlocked(player, w.id, curriculum.worlds)) target = w;
+    });
+    return target;
+  }
+
+  function startStreetMode() {
+    if (!player) {
+      UI.show('screen-new-game', 'anim-slide-in');
+      return;
+    }
+    const world = getStreetWorld();
+    currentWorldId = world.id;
+    currentLevelIdx = null;
+    streetResults = { correct: 0, total: 0 };
+    Game.restoreHearts(player);
+    UI.el('street-encounter').classList.remove('active');
+    UI.show('screen-street', 'anim-fade-in');
+
+    const npcs = world.levels
+      .filter((lv) => !lv.isBoss)
+      .map((lv, i) => ({
+        id: lv.id,
+        name: NPC_NAMES[i % NPC_NAMES.length],
+        spriteSeed: i + 1,
+        level: lv
+      }));
+
+    requestAnimationFrame(() => {
+      Adventure.start(UI.el('street-canvas'), {
+        npcs,
+        onEncounter: onStreetEncounter,
+        onComplete: onStreetComplete,
+        getHearts: () => ({ current: player.hearts, max: player.maxHearts })
+      });
+    });
+  }
+
+  function onStreetEncounter(npc, done) {
+    const overlay = UI.el('street-encounter');
+    const content = UI.el('street-encounter-content');
+    UI.clear(content);
+    overlay.classList.add('active');
+
+    const level = npc.level;
+    const dlgEx = (level.exercises || []).find((ex) => ex.type === 'dialogue' && dialogueData[ex.scene]);
+
+    const finish = (results) => {
+      streetResults.correct += results.correct;
+      streetResults.total += results.total;
+      const missed = results.total - results.correct;
+      for (let i = 0; i < missed; i++) Game.loseHeart(player);
+
+      overlay.classList.remove('active');
+      if (typeof Voice !== 'undefined') Voice.stop();
+
+      if (player.hearts <= 0) {
+        Adventure.stop();
+        finishStreet(false);
+        return;
+      }
+      const success = results.total === 0 || results.correct / results.total >= 0.5;
+      done(success);
+    };
+
+    if (dlgEx) {
+      Exercises.renderDialogue(content, dlgEx.scene, finish);
+    } else {
+      Exercises.renderMatch(content, (level.vocab || []).slice(0, 5), finish);
+    }
+  }
+
+  function onStreetComplete() {
+    Adventure.stop();
+    finishStreet(true);
+  }
+
+  function finishStreet(finished) {
+    const stars = finished ? Game.calculateStars(streetResults.correct, streetResults.total) : 0;
+    const xp = stars > 0 ? Game.calculateXP(streetResults.correct, streetResults.total, false) + 25 : 0;
+    let xpResult = { leveledUp: false, newLevel: player.level, oldLevel: player.level };
+    if (stars > 0) {
+      xpResult = Game.awardXP(player, xp);
+      Game.awardStat(player, 'conversacion', Math.ceil(streetResults.correct / 2));
+      Game.awardStat(player, 'escucha', Math.ceil(streetResults.correct / 3));
+      Game.updateStreak();
+      checkAchievements(false);
+    }
+    Storage.savePlayer(player);
+    exerciseResults = streetResults;
+    showResults(stars, xp, xpResult);
+  }
+
+  // ---------- Word Blocks (Arcade) ----------
+
+  function buildArcadePool() {
+    const seen = {};
+    const pool = [];
+    const push = (w) => {
+      if (!w || seen[w]) return;
+      seen[w] = true;
+      const entry = vocabData[w];
+      if (entry) pool.push({ word: w.replace(/_/g, ' '), en: entry.en });
+    };
+
+    SRS.getDueCards(Storage.getSRS()).forEach((c) => push(c.word));
+
+    if (pool.length < 12) {
+      outer:
+      for (const world of curriculum.worlds) {
+        if (!Game.isWorldUnlocked(player, world.id, curriculum.worlds)) break;
+        for (const lv of world.levels) {
+          for (const w of lv.vocab || []) {
+            push(w);
+            if (pool.length >= 20) break outer;
+          }
+        }
+      }
+    }
+    return pool.slice(0, 20);
+  }
+
+  function startArcade() {
+    if (!player) {
+      UI.show('screen-new-game', 'anim-slide-in');
+      return;
+    }
+    const pool = buildArcadePool();
+    if (pool.length < 4) {
+      enterWorldMap();
+      return;
+    }
+    currentWorldId = null;
+    currentLevelIdx = null;
+    UI.show('screen-arcade', 'anim-slide-in');
+    WordBlocks.start(UI.el('wb-arena'), { words: pool, onComplete: onArcadeComplete });
+  }
+
+  function onArcadeComplete(results) {
+    WordBlocks.stop();
+    const xp = results.cleared * 5 + Math.max(0, results.maxCombo - 1) * 10;
+    let xpResult = { leveledUp: false, newLevel: player.level, oldLevel: player.level };
+    if (xp > 0) {
+      xpResult = Game.awardXP(player, xp);
+      Game.awardStat(player, 'vocabulario', Math.ceil(results.cleared / 4));
+      Game.updateStreak();
+      checkAchievements(false);
+    }
+    Storage.savePlayer(player);
+    exerciseResults = { correct: results.correct, total: Math.max(results.total, 1) };
+    const stars = results.cleared >= 20 ? 3 : results.cleared >= 12 ? 2 : results.cleared > 0 ? 1 : 0;
+    showResults(stars, xp, xpResult);
+  }
+
+  // ---------- Language selection ----------
+
+  async function showLanguageScreen() {
+    UI.show('screen-language', 'anim-slide-in');
+    const listEl = UI.el('language-list');
+    UI.clear(listEl);
+    const packs = await LangPack.list();
+    const activeId = LangPack.getActiveId();
+
+    packs.forEach((p) => {
+      const row = UI.create('button', 'lang-option' + (p.id === activeId ? ' active' : ''));
+      row.appendChild(UI.create('span', 'lang-option-flag', p.flag || '🌍'));
+      const name = UI.create('span', 'lang-option-name', p.name);
+      name.appendChild(UI.create('span', 'lang-option-native', ' ' + (p.nativeName || '')));
+      row.appendChild(name);
+
+      if (p.id === activeId) {
+        row.appendChild(UI.create('span', 'lang-option-badge active', 'ACTIVE'));
+      } else if (p.imported) {
+        row.appendChild(UI.create('span', 'lang-option-badge', 'IMPORTED'));
+      }
+
+      if (p.imported) {
+        const del = UI.create('button', 'icon-btn small lang-option-delete', '✕');
+        del.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (!confirm('Delete language pack "' + p.name + '"?')) return;
+          LangPack.removeImportedPack(p.id);
+          if (LangPack.getActiveId() === p.id) LangPack.setActiveId('es');
+          showLanguageScreen();
+        });
+        row.appendChild(del);
+      }
+
+      row.addEventListener('click', () => {
+        Audio8Bit.select();
+        if (p.id !== activeId) {
+          LangPack.setActiveId(p.id);
+          location.reload();
+        }
+      });
+
+      listEl.appendChild(row);
+    });
+  }
 
   function getPack() {
     return activePack;

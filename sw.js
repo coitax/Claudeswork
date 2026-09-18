@@ -1,10 +1,13 @@
-const CACHE_NAME = 'spanish-quest-v2';
+const CACHE_NAME = 'spanish-quest-v3';
 const ASSETS = [
   './',
   './index.html',
   './css/main.css',
   './css/retro.css',
   './css/exercises.css',
+  './css/adventure.css',
+  './css/wordblocks.css',
+  './css/importer.css',
   './js/app.js',
   './js/game.js',
   './js/srs.js',
@@ -13,6 +16,10 @@ const ASSETS = [
   './js/storage.js',
   './js/ui.js',
   './js/langpack.js',
+  './js/voice.js',
+  './js/adventure.js',
+  './js/wordblocks.js',
+  './js/importer.js',
   './data/packs/index.json',
   './data/packs/es/pack.json',
   './data/packs/es/curriculum.json',

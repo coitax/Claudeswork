@@ -104,9 +104,11 @@ const Game = (() => {
 
   function isWorldUnlocked(player, worldId, worlds) {
     const idx = worlds.findIndex((w) => w.id === worldId);
-    if (idx === 0) return true;
+    if (idx <= 0) return idx === 0;
     const prevWorld = worlds[idx - 1];
-    return (player.worldProgress[prevWorld.id] || 0) >= 7;
+    // Unlock once every non-boss level of the previous world is done
+    const required = Math.max(1, (prevWorld.levels || []).length - 1);
+    return (player.worldProgress[prevWorld.id] || 0) >= required;
   }
 
   function isLevelUnlocked(player, worldId, levelIndex, levels) {
