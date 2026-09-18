@@ -2,6 +2,7 @@
 
 #screen-street {
   padding: 0;
+  padding-top: env(safe-area-inset-top, 0px);
   background: #10101c;
   position: relative;
 }
@@ -26,19 +27,25 @@
   touch-action: none;
 }
 
-/* Touch controls overlay (created/destroyed by Adventure) */
+/* Touch controls overlay (created/destroyed by Adventure).
+   Adventure.resize() sets `bottom` so the row sits over the lower edge of
+   the drawn canvas area rather than the stage bottom. */
 #street-controls {
   position: absolute;
-  inset: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  padding: 0 14px calc(10px + env(safe-area-inset-bottom, 0px));
   pointer-events: none;
   z-index: 10;
 }
 
 .street-btn {
-  position: absolute;
-  bottom: 14px;
-  width: 60px;
-  height: 60px;
+  min-width: 60px;
+  min-height: 60px;
   pointer-events: auto;
   touch-action: none;
   user-select: none;
@@ -53,17 +60,11 @@
   cursor: pointer;
 }
 
-#street-btn-left {
-  left: 14px;
-}
-
 #street-btn-right {
-  left: 86px;
+  margin-right: auto;
 }
 
 #street-btn-action {
-  right: 14px;
-  width: auto;
   min-width: 100px;
   padding: 0 0.8rem;
   font-size: 0.6rem;
@@ -99,7 +100,8 @@
   display: none;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
+  padding: 1rem 16px;
+  padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
   background: rgba(10, 10, 24, 0.92);
 }
 
@@ -112,8 +114,9 @@
   flex-direction: column;
   width: 100%;
   max-width: 440px;
-  max-height: 88vh;
-  max-height: 88dvh;
+  max-height: 85vh;
+  max-height: calc(100dvh - 2rem - env(safe-area-inset-bottom, 0px));
+  overflow: hidden;
   padding: 1rem;
   background: var(--bg-mid);
   border: var(--pixel-border) solid var(--gold);

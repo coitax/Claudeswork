@@ -163,8 +163,23 @@ const Voice = (() => {
       u.rate = rate;
       const voice = getVoice();
       if (voice) u.voice = voice;
-      u.onend = resolve;
-      u.onerror = resolve;
+      let done = false;
+      let started = false;
+      const finish = () => {
+        if (done) return;
+        done = true;
+        clearTimeout(startWatch);
+        clearTimeout(watchdog);
+        resolve();
+      };
+      u.onstart = () => { started = true; };
+      u.onend = finish;
+      u.onerror = finish;
+      // Watchdogs: some engines silently drop utterances (no events at all).
+      // Never let a hung TTS engine freeze a conversation — bail fast if
+      // speech never starts, and cap total duration if it never ends.
+      const startWatch = setTimeout(() => { if (!started) finish(); }, 1500);
+      const watchdog = setTimeout(finish, Math.max(5000, chunk.length * 250 / rate));
       window.speechSynthesis.speak(u);
     });
   }

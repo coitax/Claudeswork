@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#1a1a2e">
   <meta name="description" content="Learn Spanish through an 8-bit RPG adventure">
   <link rel="manifest" href="manifest.json">
@@ -30,12 +30,13 @@
           <span class="title-sub">RPG</span>
         </h1>
         <div class="title-pixel-art">
-          <div class="pixel-castle"></div>
+          <img class="pixel-castle-img" src="assets/sprites/icon-192.png" alt="" width="128" height="128">
         </div>
         <div class="title-menu">
           <button class="retro-btn" id="btn-new-game">NEW GAME</button>
           <button class="retro-btn" id="btn-continue" style="display:none">CONTINUE</button>
           <button class="retro-btn" id="btn-street" style="display:none">STREET MODE</button>
+          <button class="retro-btn" id="btn-charla" style="display:none">🎤 CHARLA</button>
           <button class="retro-btn" id="btn-arcade" style="display:none">WORD BLOCKS</button>
           <button class="retro-btn" id="btn-daily-review" style="display:none">DAILY REVIEW</button>
           <button class="retro-btn secondary" id="btn-language">&#127757; LANGUAGE</button>
@@ -191,6 +192,32 @@
         <button class="icon-btn small" id="btn-exit-arcade" title="Exit">✕</button>
       </div>
       <div id="wb-arena"></div>
+    </div>
+
+    <!-- Charla (Conversation) Scene Picker -->
+    <div id="screen-charla-select" class="screen">
+      <div class="screen-content">
+        <button class="icon-btn back-btn" id="btn-back-from-charla-select">&#9664; BACK</button>
+        <h2 class="retro-heading">CHARLA</h2>
+        <p class="charla-intro">Pick a conversation. Listen, then speak your answers in Spanish.</p>
+        <div class="charla-list" id="charla-list"></div>
+      </div>
+    </div>
+
+    <!-- Charla Conversation Screen -->
+    <div id="screen-charla" class="screen">
+      <div class="exercise-hud">
+        <div class="exercise-hud-left">
+          <span class="charla-npc-name" id="charla-npc-name"></span>
+        </div>
+        <div class="exercise-hud-center">
+          <h3 class="retro-subheading">CHARLA</h3>
+        </div>
+        <div class="exercise-hud-right">
+          <button class="icon-btn small" id="btn-exit-charla" title="Exit">✕</button>
+        </div>
+      </div>
+      <div class="exercise-area charla-area" id="charla-area"></div>
     </div>
 
     <!-- Language Select Screen -->

@@ -4,6 +4,7 @@ const Exercises = (() => {
   let activeTimer = null;
   let activeBossState = null;
   let activeTimeouts = [];
+  let activeDialog = null;
 
   function setData(vocab, dialogues) {
     vocabData = vocab;
@@ -29,6 +30,10 @@ const Exercises = (() => {
     }
     activeTimeouts.forEach((id) => clearTimeout(id));
     activeTimeouts = [];
+    if (activeDialog) {
+      activeDialog.cancelled = true;
+      activeDialog = null;
+    }
     if (activeBossState) {
       activeBossState.cancelled = true;
       activeBossState = null;
@@ -67,17 +72,34 @@ const Exercises = (() => {
     return row;
   }
 
-  function appendMicButton(container, correctOpt, isAnswered, onSuccess) {
+  function voicePrefs() {
+    return {
+      autoplay: Storage.get('voice_autoplay', true),
+      autolisten: Storage.get('voice_autolisten', false)
+    };
+  }
+
+  function vibrate(pattern) {
+    if (navigator.vibrate) {
+      try { navigator.vibrate(pattern); } catch { /* unsupported */ }
+    }
+  }
+
+  // Conversation mic: the player can say ANY of the options. Speech is
+  // scored against every option and the best match is selected — saying
+  // the wrong thing gets its feedback, like a real conversation.
+  function appendMicRow(container, options, isAnswered, selectByOption) {
     const micRow = UI.create('div', 'voice-mic-row');
-    const micBtn = UI.create('button', 'retro-btn voice-btn', '🎤 SAY IT');
+    const micBtn = UI.create('button', 'retro-btn voice-btn voice-mic-btn', '🎤 SAY IT');
     const micStatus = UI.create('div', 'voice-status');
     let attempts = 0;
     let listening = false;
 
-    micBtn.addEventListener('click', () => {
+    function startListening() {
       if (isAnswered() || listening) return;
       listening = true;
-      Audio8Bit.select();
+      micBtn.classList.add('listening');
+      micBtn.textContent = '🎤 ...';
       micStatus.textContent = 'Listening...';
       Voice.listen({
         timeout: 8000,
@@ -85,20 +107,25 @@ const Exercises = (() => {
           micStatus.textContent = text;
         }
       }).then((res) => {
-        listening = false;
+        stopUI();
         if (isAnswered()) return;
-        const score = Voice.scoreBest(speechText(correctOpt.text), res.alternatives);
-        if (score >= Voice.THRESHOLDS.good) {
-          const perfect = score >= Voice.THRESHOLDS.perfect;
-          micStatus.textContent = perfect ? '¡Perfecto!' : '¡Muy bien!';
-          onSuccess(perfect ? '¡Perfecto!' : '');
+        let best = null;
+        let bestScore = 0;
+        options.forEach((opt) => {
+          const score = Voice.scoreBest(speechText(opt.text), res.alternatives);
+          if (score > bestScore) { bestScore = score; best = opt; }
+        });
+        if (best && bestScore >= Voice.THRESHOLDS.partial) {
+          const perfect = best.correct && bestScore >= Voice.THRESHOLDS.perfect;
+          micStatus.textContent = perfect ? '¡Perfecto!' : '';
+          selectByOption(best, perfect);
         } else {
           attempts++;
           micStatus.textContent = 'Heard: "' + (res.transcript || '?') + '"' +
             (attempts >= 2 ? ' — or tap your answer' : ' — try again');
         }
       }).catch((err) => {
-        listening = false;
+        stopUI();
         if (isAnswered()) return;
         attempts++;
         let msg = (err && err.error === 'no-speech')
@@ -107,11 +134,23 @@ const Exercises = (() => {
         if (attempts >= 2) msg += ' (or tap your answer)';
         micStatus.textContent = msg;
       });
+    }
+
+    function stopUI() {
+      listening = false;
+      micBtn.classList.remove('listening');
+      micBtn.textContent = '🎤 SAY IT';
+    }
+
+    micBtn.addEventListener('click', () => {
+      Audio8Bit.select();
+      startListening();
     });
 
     micRow.appendChild(micBtn);
     micRow.appendChild(micStatus);
     container.appendChild(micRow);
+    return startListening;
   }
 
   function renderFlashcard(container, words, onComplete) {
@@ -332,10 +371,18 @@ const Exercises = (() => {
 
     let lineIdx = 0;
     let results = { correct: 0, total: 0 };
+    const dialogState = { cancelled: false };
+    activeDialog = dialogState;
     const dialogueContainer = UI.create('div', 'dialogue-container');
     container.appendChild(dialogueContainer);
 
+    function scrollToEnd() {
+      const scroller = container.closest('.exercise-area, .street-encounter-content') || container;
+      scroller.scrollTop = scroller.scrollHeight;
+    }
+
     function showLine() {
+      if (dialogState.cancelled) return;
       if (lineIdx >= scene.lines.length) { onComplete(results); return; }
 
       const line = scene.lines[lineIdx];
@@ -351,8 +398,16 @@ const Exercises = (() => {
           box.appendChild(UI.create('div', 'dialogue-translation-hint', line.translation));
         }
         dialogueContainer.appendChild(box);
+        scrollToEnd();
         lineIdx++;
-        schedule(showLine, 300);
+        if (hasTTS() && voicePrefs().autoplay) {
+          // Speak the line, then advance — the NPC talks to you.
+          Voice.speak(line.text).catch(() => {}).then(() => {
+            if (!dialogState.cancelled) schedule(showLine, 250);
+          });
+        } else {
+          schedule(showLine, 300);
+        }
       } else if (line.speaker === 'player') {
         results.total++;
         const optionsDiv = UI.create('div', 'dialogue-options anim-fade-in');
@@ -367,9 +422,11 @@ const Exercises = (() => {
             btn.classList.add('correct');
             results.correct++;
             Audio8Bit.correct();
+            vibrate(20);
           } else {
             btn.classList.add('wrong');
             Audio8Bit.wrong();
+            vibrate([40, 40, 40]);
             optionsDiv.querySelectorAll('.dialogue-option').forEach((o) => {
               const matchingOpt = line.options.find((lo) => lo.text === o.textContent);
               if (matchingOpt && matchingOpt.correct) o.classList.add('correct');
@@ -394,34 +451,62 @@ const Exercises = (() => {
           }, 800);
         }
 
+        const optionButtons = new Map();
         line.options.forEach((opt) => {
           const btn = UI.create('div', 'dialogue-option', opt.text);
           if (opt.correct) correctBtn = btn;
+          optionButtons.set(opt, btn);
           btn.addEventListener('click', () => {
             selectOption(opt, btn);
           });
           optionsDiv.appendChild(btn);
         });
 
-        const correctOpt = line.options.find((o) => o.correct);
-        if (hasSTT() && correctOpt) {
-          appendMicButton(optionsDiv, correctOpt, () => answered, (status) => {
-            selectOption(correctOpt, correctBtn);
-            if (status) {
-              const fb = UI.create('div', 'exercise-feedback correct anim-pop-in', status);
+        if (hasSTT()) {
+          const startListening = appendMicRow(optionsDiv, line.options, () => answered, (opt, perfect) => {
+            selectOption(opt, optionButtons.get(opt) || correctBtn);
+            if (perfect) {
+              const fb = UI.create('div', 'exercise-feedback correct anim-pop-in', '¡Perfecto! 🌟');
               dialogueContainer.appendChild(fb);
             }
           });
+          // Hands-free mode: start listening as soon as it's your turn.
+          if (voicePrefs().autolisten) {
+            schedule(() => { if (!dialogState.cancelled && !answered) startListening(); }, 500);
+          }
         }
 
         dialogueContainer.appendChild(optionsDiv);
+        scrollToEnd();
       }
     }
 
     const settingBox = UI.create('div', 'dialogue-box');
     settingBox.appendChild(UI.create('div', 'exercise-prompt', scene.setting));
+    if (hasTTS()) settingBox.appendChild(buildVoiceToggles());
     dialogueContainer.appendChild(settingBox);
     showLine();
+  }
+
+  // Toggle row: auto-voice (NPC lines spoken aloud) and hands-free
+  // (mic starts automatically on your turn). Persisted across sessions.
+  function buildVoiceToggles() {
+    const row = UI.create('div', 'voice-toggle-row');
+
+    function makeToggle(key, label, fallback) {
+      const btn = UI.create('button', 'voice-toggle' + (Storage.get(key, fallback) ? ' on' : ''), label);
+      btn.addEventListener('click', () => {
+        const next = !Storage.get(key, fallback);
+        Storage.set(key, next);
+        btn.classList.toggle('on', next);
+        Audio8Bit.select();
+      });
+      return btn;
+    }
+
+    row.appendChild(makeToggle('voice_autoplay', '🔊 AUTO-VOICE', true));
+    if (hasSTT()) row.appendChild(makeToggle('voice_autolisten', '🎤 HANDS-FREE', false));
+    return row;
   }
 
   function renderTranslate(container, exerciseData, onComplete) {
