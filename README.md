@@ -72,6 +72,13 @@ Spanish ships built-in, but the whole engine is language-agnostic:
 Packs can also be bundled in `data/packs/<code>/` with an optional
 hand-authored curriculum and dialogues — see `data/packs/es/` for the format.
 
+## Art
+
+Character portraits, world icons, and medals are CC0 pixel art from
+[Kenney](https://kenney.nl) (RPG Urban Pack, Emote Pack, Medals) — see
+`assets/sprites/CREDITS.md`. Street Mode's parallax city is drawn
+procedurally in code.
+
 ## Project layout
 
 ```

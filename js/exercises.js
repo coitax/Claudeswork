@@ -72,6 +72,25 @@ const Exercises = (() => {
     return row;
   }
 
+  // Deterministic pixel portrait per NPC name (Kenney RPG Urban Pack).
+  // Falls back to the CSS face if the image fails to load.
+  const PORTRAIT_IDS = [0, 3, 4, 6, 9, 12, 14, 15, 17, 7, 10, 16];
+
+  function npcPortrait(name) {
+    const wrap = UI.create('div', 'dialogue-npc-portrait');
+    const s = String(name || '');
+    let h = 0;
+    for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+    const idx = PORTRAIT_IDS[h % PORTRAIT_IDS.length];
+    const img = document.createElement('img');
+    img.className = 'npc-portrait-img';
+    img.alt = '';
+    img.src = 'assets/sprites/npcs/npc' + String(idx).padStart(2, '0') + '.png';
+    img.addEventListener('error', () => img.remove());
+    wrap.appendChild(img);
+    return wrap;
+  }
+
   function voicePrefs() {
     return {
       autoplay: Storage.get('voice_autoplay', true),
@@ -389,8 +408,7 @@ const Exercises = (() => {
 
       if (line.speaker === 'npc') {
         const box = UI.create('div', 'dialogue-box anim-fade-in');
-        const portrait = UI.create('div', 'dialogue-npc-portrait');
-        box.appendChild(portrait);
+        box.appendChild(npcPortrait(scene.npc));
         box.appendChild(UI.create('div', 'dialogue-speaker', scene.npc));
         box.appendChild(UI.create('div', 'dialogue-text', line.text));
         if (hasTTS()) box.appendChild(createVoiceButtons(line.text));
@@ -713,5 +731,5 @@ const Exercises = (() => {
     return result;
   }
 
-  return { setData, cancelActive, renderFlashcard, renderMatch, renderFillBlank, renderDialogue, renderTranslate, renderBoss };
+  return { setData, cancelActive, npcPortrait, renderFlashcard, renderMatch, renderFillBlank, renderDialogue, renderTranslate, renderBoss };
 })();

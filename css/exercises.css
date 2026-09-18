@@ -544,3 +544,42 @@
   text-align: center;
   padding: 2rem 0;
 }
+
+/* Kenney sprite imagery */
+.npc-portrait-img {
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+  object-fit: contain;
+  position: relative;
+  z-index: 1;
+  background: var(--bg-dark);
+}
+
+.world-icon-img {
+  width: 52px;
+  height: 52px;
+  image-rendering: pixelated;
+  object-fit: contain;
+}
+
+.results-medal {
+  width: 56px;
+  height: 56px;
+  image-rendering: pixelated;
+  margin: 0.3rem auto;
+  animation: pop-in 0.4s steps(4);
+}
+
+.charla-option-head {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-bottom: 0.4rem;
+}
+
+.charla-option-head .dialogue-npc-portrait {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+}

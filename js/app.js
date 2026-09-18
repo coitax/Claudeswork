@@ -243,7 +243,18 @@ const App = (() => {
         node.appendChild(lock);
       }
 
-      node.appendChild(UI.create('div', 'world-icon', world.icon || '🌍'));
+      const iconWrap = UI.create('div', 'world-icon');
+      if (['plaza', 'mercado', 'ciudad', 'viaje', 'fiesta'].includes(world.id)) {
+        const img = document.createElement('img');
+        img.className = 'world-icon-img';
+        img.alt = '';
+        img.src = 'assets/sprites/world/' + world.id + '.png';
+        img.addEventListener('error', () => { img.remove(); iconWrap.textContent = world.icon || '🌍'; });
+        iconWrap.appendChild(img);
+      } else {
+        iconWrap.textContent = world.icon || '🌍';
+      }
+      node.appendChild(iconWrap);
       node.appendChild(UI.create('div', 'world-name', world.name));
       node.appendChild(UI.create('div', 'world-desc', world.description));
       node.appendChild(UI.create('div', 'world-progress', progress + '/' + totalLevels + ' complete'));
@@ -478,6 +489,7 @@ const App = (() => {
     }
 
     UI.el('results-stars').textContent = renderStarString(stars);
+    UI.el('results-medal').style.display = stars === 3 ? 'inline-block' : 'none';
 
     const stats = UI.el('results-stats');
     stats.innerHTML =
@@ -845,7 +857,10 @@ const App = (() => {
       const row = UI.create('div', 'charla-option');
       row.setAttribute('role', 'button');
       row.setAttribute('tabindex', '0');
-      row.appendChild(UI.create('div', 'charla-option-npc', '🗣 ' + (scene.npc || '???')));
+      const head = UI.create('div', 'charla-option-head');
+      head.appendChild(Exercises.npcPortrait(scene.npc));
+      head.appendChild(UI.create('div', 'charla-option-npc', scene.npc || '???'));
+      row.appendChild(head);
       row.appendChild(UI.create('div', 'charla-option-setting', scene.setting || id));
       const go = () => {
         Audio8Bit.select();
