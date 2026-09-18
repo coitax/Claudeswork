@@ -444,3 +444,103 @@
 .voice-status.correct {
   color: var(--green);
 }
+
+/* Voice toggles (auto-voice / hands-free) */
+.voice-toggle-row {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.voice-toggle {
+  font-family: var(--font-main);
+  font-size: 0.5rem;
+  padding: 0.5rem 0.7rem;
+  background: var(--bg-panel);
+  color: var(--text-dim);
+  border: 2px solid var(--bg-light);
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.voice-toggle.on {
+  color: var(--green);
+  border-color: var(--green);
+  opacity: 1;
+}
+
+/* Mic listening pulse */
+.voice-mic-btn {
+  min-width: 10rem;
+}
+
+.voice-mic-btn.listening {
+  border-color: var(--red);
+  color: var(--red);
+  animation: mic-pulse 1s steps(2) infinite;
+}
+
+@keyframes mic-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(233, 69, 96, 0.5); }
+  50% { box-shadow: 0 0 0 6px rgba(233, 69, 96, 0.15); }
+}
+
+/* Charla (conversation practice) */
+.charla-intro {
+  font-size: 0.55rem;
+  color: var(--text-dim);
+  text-align: center;
+  line-height: 1.7;
+  margin: 0.5rem 0 1rem;
+}
+
+.charla-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  width: 100%;
+}
+
+.charla-option {
+  background: var(--bg-panel);
+  border: 3px solid var(--bg-light);
+  padding: 0.8rem;
+  cursor: pointer;
+  min-height: 44px;
+}
+
+.charla-option:active {
+  border-color: var(--gold);
+  transform: translateY(2px);
+}
+
+.charla-option-npc {
+  font-size: 0.65rem;
+  color: var(--gold);
+  margin-bottom: 0.4rem;
+}
+
+.charla-option-setting {
+  font-size: 0.5rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+
+.charla-npc-name {
+  font-size: 0.55rem;
+  color: var(--gold);
+}
+
+.charla-area {
+  justify-content: flex-start;
+  overflow-y: auto;
+}
+
+.charla-empty {
+  font-size: 0.55rem;
+  color: var(--text-dim);
+  text-align: center;
+  padding: 2rem 0;
+}

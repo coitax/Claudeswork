@@ -130,10 +130,15 @@
 }
 
 .title-pixel-art {
-  width: 120px;
-  height: 80px;
   margin: 0 auto;
   position: relative;
+  line-height: 0;
+}
+
+.pixel-castle-img {
+  width: 128px;
+  height: 128px;
+  image-rendering: pixelated;
 }
 
 .pixel-castle {

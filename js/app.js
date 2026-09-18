@@ -46,6 +46,7 @@ const App = (() => {
     if (player) {
       UI.el('btn-continue').style.display = 'block';
       UI.el('btn-street').style.display = 'block';
+      UI.el('btn-charla').style.display = 'block';
       UI.el('btn-arcade').style.display = 'block';
       const dueCards = SRS.getDueCards(Storage.getSRS());
       if (dueCards.length > 0) UI.el('btn-daily-review').style.display = 'block';
@@ -81,6 +82,24 @@ const App = (() => {
       Audio8Bit.select();
       primeVoice();
       startArcade();
+    });
+
+    UI.el('btn-charla').addEventListener('click', () => {
+      Audio8Bit.select();
+      primeVoice();
+      showCharlaSelect();
+    });
+
+    UI.el('btn-back-from-charla-select').addEventListener('click', () => {
+      Audio8Bit.select();
+      UI.show('screen-title', 'anim-slide-back');
+    });
+
+    UI.el('btn-exit-charla').addEventListener('click', () => {
+      Audio8Bit.select();
+      Exercises.cancelActive();
+      if (typeof Voice !== 'undefined') Voice.stop();
+      showCharlaSelect();
     });
 
     UI.el('btn-language').addEventListener('click', () => {
@@ -806,6 +825,61 @@ const App = (() => {
     exerciseResults = { correct: results.correct, total: Math.max(results.total, 1) };
     const stars = results.cleared >= 20 ? 3 : results.cleared >= 12 ? 2 : results.cleared > 0 ? 1 : 0;
     showResults(stars, xp, xpResult);
+  }
+
+  // ---------- Charla (conversation practice) ----------
+
+  function showCharlaSelect() {
+    UI.show('screen-charla-select', 'anim-slide-in');
+    const list = UI.el('charla-list');
+    UI.clear(list);
+
+    const sceneIds = Object.keys(dialogueData);
+    if (!sceneIds.length) {
+      list.appendChild(UI.create('div', 'charla-empty', 'No conversations in this language pack yet.'));
+      return;
+    }
+
+    sceneIds.forEach((id) => {
+      const scene = dialogueData[id];
+      const row = UI.create('div', 'charla-option');
+      row.setAttribute('role', 'button');
+      row.setAttribute('tabindex', '0');
+      row.appendChild(UI.create('div', 'charla-option-npc', '🗣 ' + (scene.npc || '???')));
+      row.appendChild(UI.create('div', 'charla-option-setting', scene.setting || id));
+      const go = () => {
+        Audio8Bit.select();
+        startCharla(id);
+      };
+      row.addEventListener('click', go);
+      row.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); }
+      });
+      list.appendChild(row);
+    });
+  }
+
+  function startCharla(sceneId) {
+    const scene = dialogueData[sceneId];
+    if (!scene) return;
+    currentWorldId = null;
+    currentLevelIdx = null;
+    UI.el('charla-npc-name').textContent = scene.npc || '';
+    UI.show('screen-charla', 'anim-slide-in');
+    Exercises.renderDialogue(UI.el('charla-area'), sceneId, (results) => {
+      const xp = results.correct * 15 + (results.total > 0 && results.correct === results.total ? 20 : 0);
+      let xpResult = { leveledUp: false, newLevel: player.level, oldLevel: player.level };
+      if (xp > 0) {
+        xpResult = Game.awardXP(player, xp);
+        Game.awardStat(player, 'conversacion', results.correct);
+        Game.awardStat(player, 'escucha', Math.ceil(results.correct / 2));
+        Game.updateStreak();
+        checkAchievements(false);
+      }
+      Storage.savePlayer(player);
+      exerciseResults = { correct: results.correct, total: Math.max(results.total, 1) };
+      showResults(Game.calculateStars(results.correct, results.total), xp, xpResult);
+    });
   }
 
   // ---------- Language selection ----------
