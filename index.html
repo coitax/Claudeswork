@@ -2,17 +2,21 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="theme-color" content="#1a1a2e">
   <meta name="description" content="Learn Spanish through an 8-bit RPG adventure">
   <link rel="manifest" href="manifest.json">
-  <link rel="icon" href="favicon.ico">
+  <link rel="icon" type="image/png" href="assets/sprites/icon-192.png">
+  <link rel="apple-touch-icon" href="assets/sprites/icon-192.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/retro.css">
   <link rel="stylesheet" href="css/exercises.css">
+  <link rel="stylesheet" href="css/adventure.css">
+  <link rel="stylesheet" href="css/wordblocks.css">
+  <link rel="stylesheet" href="css/importer.css">
   <title>Spanish Quest RPG</title>
 </head>
 <body>
@@ -31,7 +35,10 @@
         <div class="title-menu">
           <button class="retro-btn" id="btn-new-game">NEW GAME</button>
           <button class="retro-btn" id="btn-continue" style="display:none">CONTINUE</button>
+          <button class="retro-btn" id="btn-street" style="display:none">STREET MODE</button>
+          <button class="retro-btn" id="btn-arcade" style="display:none">WORD BLOCKS</button>
           <button class="retro-btn" id="btn-daily-review" style="display:none">DAILY REVIEW</button>
+          <button class="retro-btn secondary" id="btn-language">&#127757; LANGUAGE</button>
         </div>
         <p class="title-footer">Learn Spanish. Level Up. Have Fun.</p>
       </div>
@@ -162,14 +169,59 @@
       </div>
       <div class="exercise-area" id="review-area"></div>
     </div>
+
+    <!-- Street Mode (Adventure) Screen -->
+    <div id="screen-street" class="screen">
+      <button class="icon-btn small street-exit" id="btn-exit-street" title="Exit">✕</button>
+      <div id="street-stage">
+        <canvas id="street-canvas" width="320" height="180"></canvas>
+        <!-- div#street-controls (touch buttons) is created/destroyed here by Adventure itself -->
+      </div>
+      <div id="street-encounter" class="street-encounter-overlay">
+        <div class="street-encounter-panel">
+          <div id="street-encounter-content" class="street-encounter-content"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Arcade Screen (Word Blocks) -->
+    <div id="screen-arcade" class="screen">
+      <div class="wb-arcade-hud">
+        <span class="hud-world-name">PALABRA DROP</span>
+        <button class="icon-btn small" id="btn-exit-arcade" title="Exit">✕</button>
+      </div>
+      <div id="wb-arena"></div>
+    </div>
+
+    <!-- Language Select Screen -->
+    <div id="screen-language" class="screen">
+      <div class="screen-content">
+        <button class="icon-btn back-btn" id="language-back-btn">&#9664; BACK</button>
+        <h2 class="importer-title">CHOOSE LANGUAGE</h2>
+        <div class="lang-list" id="language-list"></div>
+        <button class="retro-btn" id="language-import-btn">+ IMPORT DICTIONARY</button>
+      </div>
+    </div>
+
+    <!-- Dictionary Importer Screen -->
+    <div id="screen-import" class="screen">
+      <div class="screen-content">
+        <div id="import-container"></div>
+      </div>
+    </div>
   </div>
 
   <script src="js/storage.js"></script>
+  <script src="js/langpack.js"></script>
   <script src="js/audio.js"></script>
+  <script src="js/voice.js"></script>
   <script src="js/srs.js"></script>
   <script src="js/game.js"></script>
   <script src="js/ui.js"></script>
   <script src="js/exercises.js"></script>
+  <script src="js/adventure.js"></script>
+  <script src="js/wordblocks.js"></script>
+  <script src="js/importer.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

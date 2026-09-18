@@ -1,10 +1,117 @@
 const Exercises = (() => {
   let vocabData = {};
   let dialogueData = {};
+  let activeTimer = null;
+  let activeBossState = null;
+  let activeTimeouts = [];
 
   function setData(vocab, dialogues) {
     vocabData = vocab;
     dialogueData = dialogues;
+  }
+
+  // Timeouts that advance exercise state must be cancellable, or an exercise
+  // abandoned mid-run (exit button, street encounter aborted) fires its
+  // completion callback later against live game state.
+  function schedule(fn, ms) {
+    const id = setTimeout(() => {
+      activeTimeouts = activeTimeouts.filter((t) => t !== id);
+      fn();
+    }, ms);
+    activeTimeouts.push(id);
+    return id;
+  }
+
+  function cancelActive() {
+    if (activeTimer !== null) {
+      clearInterval(activeTimer);
+      activeTimer = null;
+    }
+    activeTimeouts.forEach((id) => clearTimeout(id));
+    activeTimeouts = [];
+    if (activeBossState) {
+      activeBossState.cancelled = true;
+      activeBossState = null;
+    }
+    if (typeof Voice !== 'undefined') {
+      Voice.stop();
+    }
+  }
+
+  function hasTTS() {
+    return typeof Voice !== 'undefined' && Voice.support().tts;
+  }
+
+  function hasSTT() {
+    return typeof Voice !== 'undefined' && Voice.support().stt;
+  }
+
+  function speechText(text) {
+    return String(text).replace(/_/g, ' ');
+  }
+
+  function createVoiceButtons(text) {
+    const row = UI.create('span', 'voice-btn-row');
+    const play = UI.create('button', 'icon-btn small voice-btn', '🔊');
+    play.addEventListener('click', (e) => {
+      e.stopPropagation();
+      Voice.speak(speechText(text)).catch(() => {});
+    });
+    const slow = UI.create('button', 'icon-btn small voice-btn', '🐢');
+    slow.addEventListener('click', (e) => {
+      e.stopPropagation();
+      Voice.speakSlow(speechText(text));
+    });
+    row.appendChild(play);
+    row.appendChild(slow);
+    return row;
+  }
+
+  function appendMicButton(container, correctOpt, isAnswered, onSuccess) {
+    const micRow = UI.create('div', 'voice-mic-row');
+    const micBtn = UI.create('button', 'retro-btn voice-btn', '🎤 SAY IT');
+    const micStatus = UI.create('div', 'voice-status');
+    let attempts = 0;
+    let listening = false;
+
+    micBtn.addEventListener('click', () => {
+      if (isAnswered() || listening) return;
+      listening = true;
+      Audio8Bit.select();
+      micStatus.textContent = 'Listening...';
+      Voice.listen({
+        timeout: 8000,
+        onInterim: (text) => {
+          micStatus.textContent = text;
+        }
+      }).then((res) => {
+        listening = false;
+        if (isAnswered()) return;
+        const score = Voice.scoreBest(speechText(correctOpt.text), res.alternatives);
+        if (score >= Voice.THRESHOLDS.good) {
+          const perfect = score >= Voice.THRESHOLDS.perfect;
+          micStatus.textContent = perfect ? '¡Perfecto!' : '¡Muy bien!';
+          onSuccess(perfect ? '¡Perfecto!' : '');
+        } else {
+          attempts++;
+          micStatus.textContent = 'Heard: "' + (res.transcript || '?') + '"' +
+            (attempts >= 2 ? ' — or tap your answer' : ' — try again');
+        }
+      }).catch((err) => {
+        listening = false;
+        if (isAnswered()) return;
+        attempts++;
+        let msg = (err && err.error === 'no-speech')
+          ? 'Didn\'t hear you — try again'
+          : 'Mic error — try again';
+        if (attempts >= 2) msg += ' (or tap your answer)';
+        micStatus.textContent = msg;
+      });
+    });
+
+    micRow.appendChild(micBtn);
+    micRow.appendChild(micStatus);
+    container.appendChild(micRow);
   }
 
   function renderFlashcard(container, words, onComplete) {
@@ -29,10 +136,12 @@ const Exercises = (() => {
       const front = UI.create('div', 'card-front');
       front.appendChild(UI.create('div', 'exercise-word', wordKey));
       if (data.phonetic) front.appendChild(UI.create('div', 'exercise-phonetic', data.phonetic));
+      if (hasTTS()) front.appendChild(createVoiceButtons(wordKey));
       front.appendChild(UI.create('div', 'flashcard-tap-hint', 'TAP TO REVEAL'));
 
       const back = UI.create('div', 'card-back');
       back.appendChild(UI.create('div', 'exercise-word', wordKey));
+      if (hasTTS()) back.appendChild(createVoiceButtons(wordKey));
       back.appendChild(UI.create('div', 'exercise-translation', data.en));
       if (data.example_es) {
         const ex = UI.create('div', 'exercise-phonetic');
@@ -134,7 +243,7 @@ const Exercises = (() => {
             Audio8Bit.correct();
             selected = null;
             if (matchedCount === pairs.length) {
-              setTimeout(() => onComplete(results), 500);
+              schedule(() => onComplete(results), 500);
             }
           } else {
             tile.classList.add('wrong');
@@ -237,55 +346,73 @@ const Exercises = (() => {
         box.appendChild(portrait);
         box.appendChild(UI.create('div', 'dialogue-speaker', scene.npc));
         box.appendChild(UI.create('div', 'dialogue-text', line.text));
+        if (hasTTS()) box.appendChild(createVoiceButtons(line.text));
         if (line.translation) {
           box.appendChild(UI.create('div', 'dialogue-translation-hint', line.translation));
         }
         dialogueContainer.appendChild(box);
         lineIdx++;
-        setTimeout(showLine, 300);
+        schedule(showLine, 300);
       } else if (line.speaker === 'player') {
         results.total++;
         const optionsDiv = UI.create('div', 'dialogue-options anim-fade-in');
         let answered = false;
+        let correctBtn = null;
+
+        function selectOption(opt, btn) {
+          if (answered) return;
+          answered = true;
+
+          if (opt.correct) {
+            btn.classList.add('correct');
+            results.correct++;
+            Audio8Bit.correct();
+          } else {
+            btn.classList.add('wrong');
+            Audio8Bit.wrong();
+            optionsDiv.querySelectorAll('.dialogue-option').forEach((o) => {
+              const matchingOpt = line.options.find((lo) => lo.text === o.textContent);
+              if (matchingOpt && matchingOpt.correct) o.classList.add('correct');
+            });
+          }
+
+          if (opt.feedback) {
+            const fb = UI.create('div', 'exercise-feedback ' + (opt.correct ? 'correct' : 'wrong'));
+            fb.textContent = opt.correct ? '✓ ' + (opt.feedback || 'Correct!') : opt.feedback;
+            dialogueContainer.appendChild(fb);
+          }
+
+          const playerBox = UI.create('div', 'dialogue-box anim-fade-in');
+          playerBox.appendChild(UI.create('div', 'dialogue-speaker', 'You'));
+          playerBox.appendChild(UI.create('div', 'dialogue-text', opt.text));
+          dialogueContainer.appendChild(playerBox);
+
+          lineIdx++;
+          schedule(() => {
+            optionsDiv.remove();
+            showLine();
+          }, 800);
+        }
 
         line.options.forEach((opt) => {
           const btn = UI.create('div', 'dialogue-option', opt.text);
+          if (opt.correct) correctBtn = btn;
           btn.addEventListener('click', () => {
-            if (answered) return;
-            answered = true;
-
-            if (opt.correct) {
-              btn.classList.add('correct');
-              results.correct++;
-              Audio8Bit.correct();
-            } else {
-              btn.classList.add('wrong');
-              Audio8Bit.wrong();
-              optionsDiv.querySelectorAll('.dialogue-option').forEach((o) => {
-                const matchingOpt = line.options.find((lo) => lo.text === o.textContent);
-                if (matchingOpt && matchingOpt.correct) o.classList.add('correct');
-              });
-            }
-
-            if (opt.feedback) {
-              const fb = UI.create('div', 'exercise-feedback ' + (opt.correct ? 'correct' : 'wrong'));
-              fb.textContent = opt.correct ? '✓ ' + (opt.feedback || 'Correct!') : opt.feedback;
-              dialogueContainer.appendChild(fb);
-            }
-
-            const playerBox = UI.create('div', 'dialogue-box anim-fade-in');
-            playerBox.appendChild(UI.create('div', 'dialogue-speaker', 'You'));
-            playerBox.appendChild(UI.create('div', 'dialogue-text', opt.text));
-            dialogueContainer.appendChild(playerBox);
-
-            lineIdx++;
-            setTimeout(() => {
-              optionsDiv.remove();
-              showLine();
-            }, 800);
+            selectOption(opt, btn);
           });
           optionsDiv.appendChild(btn);
         });
+
+        const correctOpt = line.options.find((o) => o.correct);
+        if (hasSTT() && correctOpt) {
+          appendMicButton(optionsDiv, correctOpt, () => answered, (status) => {
+            selectOption(correctOpt, correctBtn);
+            if (status) {
+              const fb = UI.create('div', 'exercise-feedback correct anim-pop-in', status);
+              dialogueContainer.appendChild(fb);
+            }
+          });
+        }
 
         dialogueContainer.appendChild(optionsDiv);
       }
@@ -410,14 +537,25 @@ const Exercises = (() => {
     const exerciseArea = UI.create('div', 'exercise-area');
     container.appendChild(exerciseArea);
 
-    const interval = setInterval(() => {
+    const bossState = { cancelled: false, finished: false };
+    activeBossState = bossState;
+
+    function finishBoss() {
+      if (bossState.cancelled || bossState.finished) return;
+      bossState.finished = true;
+      if (activeTimer !== null) {
+        clearInterval(activeTimer);
+        activeTimer = null;
+      }
+      activeBossState = null;
+      onComplete(results);
+    }
+
+    activeTimer = setInterval(() => {
       timeLeft--;
       timer.textContent = timeLeft + 's';
       if (timeLeft <= 10) timer.classList.add('warning');
-      if (timeLeft <= 0) {
-        clearInterval(interval);
-        onComplete(results);
-      }
+      if (timeLeft <= 0) finishBoss();
     }, 1000);
 
     const exercises = [];
@@ -435,9 +573,9 @@ const Exercises = (() => {
     const totalExercises = exercises.length || 1;
 
     function nextExercise() {
+      if (bossState.cancelled) return;
       if (exIdx >= exercises.length || timeLeft <= 0) {
-        clearInterval(interval);
-        onComplete(results);
+        finishBoss();
         return;
       }
 
@@ -490,5 +628,5 @@ const Exercises = (() => {
     return result;
   }
 
-  return { setData, renderFlashcard, renderMatch, renderFillBlank, renderDialogue, renderTranslate, renderBoss };
+  return { setData, cancelActive, renderFlashcard, renderMatch, renderFillBlank, renderDialogue, renderTranslate, renderBoss };
 })();
