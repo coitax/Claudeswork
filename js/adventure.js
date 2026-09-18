@@ -1,10 +1,11 @@
 const Adventure = (() => {
   // --- Constants ---
   const VW = 320;
-  const VH = 180;
+  const VH_MIN = 180;
+  const VH_MAX = 300;
   const STEP = 1 / 60;
   const MAX_DELTA = 0.25;
-  const GROUND_Y = 150;
+  const BASE_GROUND_Y = 150;
   const PLAYER_SPEED = 62;
   const TALK_RANGE = 24;
   const COOLDOWN_RANGE = 34;
@@ -26,6 +27,9 @@ const Adventure = (() => {
   let displayCtx = null;
   let backCanvas = null;
   let bctx = null;
+  let VH = VH_MIN;
+  let groundY = BASE_GROUND_Y;
+  let skyShift = 0;
   let scale = 1;
   let offX = 0;
   let offY = 0;
@@ -344,17 +348,55 @@ const Adventure = (() => {
   }
 
   // --- Display scaling ---
+  // The backbuffer is a fixed 320 wide, but its height adapts to the stage
+  // aspect so portrait phones get a taller view (more sky + more street)
+  // instead of a letterboxed 16:9 strip. Gameplay is 1D horizontal, so only
+  // rendering anchors depend on VH/groundY.
+  function applyLayout() {
+    const extra = VH - VH_MIN;
+    skyShift = Math.round(extra * 0.62);
+    groundY = BASE_GROUND_Y + skyShift;
+  }
+
+  function makeBackbuffer() {
+    backCanvas = document.createElement('canvas');
+    backCanvas.width = VW;
+    backCanvas.height = VH;
+    bctx = backCanvas.getContext('2d');
+  }
+
+  function positionControls() {
+    if (!controlsEl || !displayCanvas) return;
+    const gap = Math.max(0, Math.round(displayCanvas.height - (offY + VH * scale)));
+    controlsEl.style.bottom = gap + 'px';
+  }
+
   function resize() {
     if (!displayCanvas) return;
     const parent = displayCanvas.parentElement;
     const availW = (parent && parent.clientWidth) || displayCanvas.clientWidth || VW;
     const availH = (parent && parent.clientHeight) || displayCanvas.clientHeight || VH;
-    scale = Math.max(1, Math.floor(Math.min(availW / VW, availH / VH)));
-    displayCanvas.width = Math.max(availW, VW);
-    displayCanvas.height = Math.max(availH, VH);
-    offX = Math.floor((displayCanvas.width - VW * scale) / 2);
-    offY = Math.floor((displayCanvas.height - VH * scale) / 2);
+    const targetH = clamp(Math.round(VW * availH / Math.max(1, availW)), VH_MIN, VH_MAX);
+    if (targetH !== VH || !backCanvas) {
+      VH = targetH;
+      makeBackbuffer();
+      applyLayout();
+    }
+    const fit = Math.min(availW / VW, availH / VH);
+    const intScale = Math.max(1, Math.floor(fit));
+    // Integer scale keeps pixels crisp; fall back to a fractional fit when the
+    // integer scale would leave the canvas narrower than ~85% of the stage.
+    if (fit >= 1 && intScale * VW >= availW * 0.85) {
+      scale = intScale;
+    } else {
+      scale = fit;
+    }
+    displayCanvas.width = Math.max(availW, 1);
+    displayCanvas.height = Math.max(availH, 1);
+    offX = Math.floor((displayCanvas.width - Math.round(VW * scale)) / 2);
+    offY = Math.floor((displayCanvas.height - Math.round(VH * scale)) / 2);
     displayCtx.imageSmoothingEnabled = false;
+    positionControls();
   }
 
   function onOrientation() {
@@ -487,41 +529,50 @@ const Adventure = (() => {
   }
 
   function renderSky() {
+    // Stretch the gradient bands so the sky always ends at the far-building
+    // band (groundY - 42), whatever the backbuffer height is.
+    const skyBottom = groundY - 42;
+    const f = skyBottom / 108;
     let y = 0;
+    let acc = 0;
     for (let i = 0; i < SKY_BANDS.length; i++) {
+      acc += SKY_BANDS[i][1];
+      const next = i === SKY_BANDS.length - 1 ? skyBottom : Math.round(acc * f);
       bctx.fillStyle = SKY_BANDS[i][0];
-      bctx.fillRect(0, y, VW, SKY_BANDS[i][1]);
-      y += SKY_BANDS[i][1];
+      bctx.fillRect(0, y, VW, next - y);
+      y = next;
     }
+    const sunY = Math.round(18 * f);
     bctx.fillStyle = '#f5c842';
-    bctx.fillRect(252, 18, 12, 12);
+    bctx.fillRect(252, sunY, 12, 12);
     bctx.fillStyle = '#ffe9a0';
-    bctx.fillRect(255, 21, 6, 6);
+    bctx.fillRect(255, sunY + 3, 6, 6);
     const wrap = VW + 80;
     for (let i = 0; i < CLOUDS.length; i++) {
       const c = CLOUDS[i];
       let cx = (c[0] - cameraX * 0.05 + worldTime * (3 + i)) % wrap;
       if (cx < 0) cx += wrap;
-      drawCloud(Math.floor(cx) - 40, c[1], c[2]);
+      drawCloud(Math.floor(cx) - 40, Math.round(c[1] * f), c[2]);
     }
   }
 
   function renderFarBuildings() {
+    const base = groundY - 30;
     bctx.fillStyle = '#2a3766';
-    bctx.fillRect(0, 108, VW, 26);
+    bctx.fillRect(0, groundY - 42, VW, 26);
     const spacing = 56;
     const layerX = cameraX * 0.2;
     const first = Math.floor(layerX / spacing) - 1;
     const last = Math.floor((layerX + VW) / spacing) + 1;
     for (let i = first; i <= last; i++) {
       const rnd = mulberry32(i * 7919 + 101);
-      const h = 26 + Math.floor(rnd() * 44);
+      const h = 26 + Math.floor(rnd() * 44) + Math.floor(skyShift * 0.35);
       const w = 34 + Math.floor(rnd() * 18);
       const x = Math.floor(i * spacing - layerX);
       bctx.fillStyle = FAR_COLORS[((i % 3) + 3) % 3];
-      bctx.fillRect(x, 120 - h, w, h);
+      bctx.fillRect(x, base - h, w, h);
       if (rnd() < 0.4) {
-        bctx.fillRect(x + Math.floor(w / 2) - 1, 120 - h - 6, 2, 6);
+        bctx.fillRect(x + Math.floor(w / 2) - 1, base - h - 6, 2, 6);
       }
     }
   }
@@ -529,14 +580,14 @@ const Adventure = (() => {
   function renderNearBuildings() {
     const spacing = 88;
     const layerX = cameraX * 0.5;
-    const bottom = 134;
+    const bottom = groundY - 16;
     const first = Math.floor(layerX / spacing) - 1;
     const last = Math.floor((layerX + VW) / spacing) + 1;
     for (let i = first; i <= last; i++) {
       const rnd = mulberry32(i * 5077 + 4242);
       const ci = Math.floor(rnd() * WALL_COLORS.length);
       const w = 66 + Math.floor(rnd() * 18);
-      const h = 54 + Math.floor(rnd() * 46);
+      const h = 54 + Math.floor(rnd() * 46) + Math.floor(skyShift * 0.5);
       const x = Math.floor(i * spacing - layerX);
       const top = bottom - h;
       bctx.fillStyle = WALL_COLORS[ci];
@@ -567,43 +618,48 @@ const Adventure = (() => {
   // --- Rendering: street + props (1.0 layer) ---
   function renderStreet() {
     bctx.fillStyle = '#5a5a6e';
-    bctx.fillRect(0, 134, VW, 18);
+    bctx.fillRect(0, groundY - 16, VW, 18);
     bctx.fillStyle = '#70708a';
-    bctx.fillRect(0, 134, VW, 2);
+    bctx.fillRect(0, groundY - 16, VW, 2);
     bctx.fillStyle = '#4c4c60';
     for (let sx = -(Math.floor(cameraX) % 16); sx < VW; sx += 16) {
-      bctx.fillRect(sx, 136, 1, 16);
+      bctx.fillRect(sx, groundY - 14, 1, 16);
     }
     bctx.fillStyle = '#3c3c50';
-    bctx.fillRect(0, 152, VW, 3);
+    bctx.fillRect(0, groundY + 2, VW, 3);
     bctx.fillStyle = '#303044';
-    bctx.fillRect(0, 155, VW, VH - 155);
+    bctx.fillRect(0, groundY + 5, VW, VH - groundY - 5);
     bctx.fillStyle = '#c9c9a0';
     for (let dx = -(Math.floor(cameraX) % 28); dx < VW; dx += 28) {
-      bctx.fillRect(dx, 170, 12, 2);
+      bctx.fillRect(dx, groundY + 20, 12, 2);
+    }
+    if (VH - groundY >= 56) {
+      for (let dx = -(Math.floor(cameraX) % 40) - 14; dx < VW; dx += 40) {
+        bctx.fillRect(dx, groundY + 44, 16, 3);
+      }
     }
   }
 
   function drawLamppost(x) {
     bctx.fillStyle = '#22222e';
-    bctx.fillRect(x, 106, 2, 45);
-    bctx.fillRect(x - 2, 149, 6, 2);
+    bctx.fillRect(x, groundY - 44, 2, 45);
+    bctx.fillRect(x - 2, groundY - 1, 6, 2);
     bctx.fillStyle = '#f5c842';
-    bctx.fillRect(x - 2, 100, 6, 6);
+    bctx.fillRect(x - 2, groundY - 50, 6, 6);
     bctx.fillStyle = '#fff2c0';
-    bctx.fillRect(x - 1, 101, 4, 4);
+    bctx.fillRect(x - 1, groundY - 49, 4, 4);
   }
 
   function drawPlant(x) {
     bctx.fillStyle = '#2f8f4e';
-    bctx.fillRect(x - 5, 134, 12, 9);
-    bctx.fillRect(x - 2, 130, 6, 5);
+    bctx.fillRect(x - 5, groundY - 16, 12, 9);
+    bctx.fillRect(x - 2, groundY - 20, 6, 5);
     bctx.fillStyle = '#4ade80';
-    bctx.fillRect(x - 3, 133, 4, 3);
+    bctx.fillRect(x - 3, groundY - 17, 4, 3);
     bctx.fillStyle = '#a0402a';
-    bctx.fillRect(x - 4, 143, 10, 8);
+    bctx.fillRect(x - 4, groundY - 7, 10, 8);
     bctx.fillStyle = '#7a2e1e';
-    bctx.fillRect(x - 4, 143, 10, 2);
+    bctx.fillRect(x - 4, groundY - 7, 10, 2);
   }
 
   function drawAwning(x, rnd) {
@@ -611,25 +667,25 @@ const Adventure = (() => {
     const w = stripes * 5;
     const c1 = rnd() < 0.5 ? '#e94560' : '#4ade80';
     bctx.fillStyle = '#22222e';
-    bctx.fillRect(x, 126, 2, 25);
-    bctx.fillRect(x + w - 2, 126, 2, 25);
+    bctx.fillRect(x, groundY - 24, 2, 25);
+    bctx.fillRect(x + w - 2, groundY - 24, 2, 25);
     for (let s = 0; s < stripes; s++) {
       bctx.fillStyle = s % 2 === 0 ? c1 : '#e8e8e8';
-      bctx.fillRect(x + s * 5, 118, 5, 8);
-      bctx.fillRect(x + s * 5 + 1, 126, 3, 2);
+      bctx.fillRect(x + s * 5, groundY - 32, 5, 8);
+      bctx.fillRect(x + s * 5 + 1, groundY - 24, 3, 2);
     }
   }
 
   function drawCafeTable(x) {
     bctx.fillStyle = '#d8d8e0';
-    bctx.fillRect(x - 7, 139, 14, 2);
+    bctx.fillRect(x - 7, groundY - 11, 14, 2);
     bctx.fillStyle = '#8888a0';
-    bctx.fillRect(x - 1, 141, 2, 10);
+    bctx.fillRect(x - 1, groundY - 9, 2, 10);
     bctx.fillStyle = '#6b4a2a';
-    bctx.fillRect(x - 13, 144, 5, 2);
-    bctx.fillRect(x - 12, 146, 3, 5);
-    bctx.fillRect(x + 8, 144, 5, 2);
-    bctx.fillRect(x + 9, 146, 3, 5);
+    bctx.fillRect(x - 13, groundY - 6, 5, 2);
+    bctx.fillRect(x - 12, groundY - 4, 3, 5);
+    bctx.fillRect(x + 8, groundY - 6, 5, 2);
+    bctx.fillRect(x + 9, groundY - 4, 3, 5);
   }
 
   function renderProps() {
@@ -671,9 +727,9 @@ const Adventure = (() => {
       if (sx < -SPRITE_W - 20 || sx > VW + 20) continue;
       const bob = Math.sin(worldTime * 2.2 + npc.bobPhase) > 0.3 ? -1 : 0;
       const sprite = pc < npc.x + SPRITE_W / 2 ? npc.spriteL : npc.spriteR;
-      bctx.drawImage(sprite, sx, GROUND_Y - SPRITE_H + bob);
+      bctx.drawImage(sprite, sx, groundY - SPRITE_H + bob);
       if (npc.completed) {
-        drawGridShape(HEART_GRID, sx + 4, GROUND_Y - SPRITE_H - 9, '#e94560');
+        drawGridShape(HEART_GRID, sx + 4, groundY - SPRITE_H - 9, '#e94560');
       }
     }
     let frame = 0;
@@ -681,14 +737,14 @@ const Adventure = (() => {
       frame = WALK_SEQ[Math.floor(player.animTime * 10) % WALK_SEQ.length];
     }
     const set = player.facing < 0 ? playerFrames.l : playerFrames.r;
-    bctx.drawImage(set[frame], Math.round(player.x - cameraX), GROUND_Y - SPRITE_H);
+    bctx.drawImage(set[frame], Math.round(player.x - cameraX), groundY - SPRITE_H);
   }
 
   function renderPrompt() {
     if (!promptNpc || inConversation) return;
     const sx = Math.round(promptNpc.x - cameraX) + Math.floor(SPRITE_W / 2);
     const bobY = Math.round(Math.sin(worldTime * 6) * 2);
-    const top = GROUND_Y - SPRITE_H;
+    const top = groundY - SPRITE_H;
     bctx.fillStyle = 'rgba(10, 10, 30, 0.6)';
     bctx.fillRect(sx - 13, top - 25 + bobY, 26, 22);
     drawText('!', sx - 3, top - 23 + bobY, '#f5c842', 2);
@@ -734,7 +790,8 @@ const Adventure = (() => {
   function blit() {
     displayCtx.fillStyle = LETTERBOX_COLOR;
     displayCtx.fillRect(0, 0, displayCanvas.width, displayCanvas.height);
-    displayCtx.drawImage(backCanvas, 0, 0, VW, VH, offX, offY, VW * scale, VH * scale);
+    displayCtx.drawImage(backCanvas, 0, 0, VW, VH, offX, offY,
+      Math.round(VW * scale), Math.round(VH * scale));
   }
 
   // --- Main loop ---
@@ -781,10 +838,8 @@ const Adventure = (() => {
     displayCanvas = canvas;
     displayCtx = canvas.getContext('2d');
     opts = options || {};
-    backCanvas = document.createElement('canvas');
-    backCanvas.width = VW;
-    backCanvas.height = VH;
-    bctx = backCanvas.getContext('2d');
+    makeBackbuffer();
+    applyLayout();
     buildPlayerFrames();
     setupWorld(opts.npcs || []);
     createControls(canvas.parentElement);
