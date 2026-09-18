@@ -1,22 +1,25 @@
-const CACHE_NAME = 'spanish-quest-v1';
+const CACHE_NAME = 'spanish-quest-v2';
 const ASSETS = [
-  '/',
-  '/index.html',
-  '/css/main.css',
-  '/css/retro.css',
-  '/css/exercises.css',
-  '/js/app.js',
-  '/js/game.js',
-  '/js/srs.js',
-  '/js/exercises.js',
-  '/js/audio.js',
-  '/js/storage.js',
-  '/js/ui.js',
-  '/data/curriculum.json',
-  '/data/vocabulary.json',
-  '/data/dialogues.json',
-  '/data/achievements.json',
-  '/manifest.json'
+  './',
+  './index.html',
+  './css/main.css',
+  './css/retro.css',
+  './css/exercises.css',
+  './js/app.js',
+  './js/game.js',
+  './js/srs.js',
+  './js/exercises.js',
+  './js/audio.js',
+  './js/storage.js',
+  './js/ui.js',
+  './js/langpack.js',
+  './data/packs/index.json',
+  './data/packs/es/pack.json',
+  './data/packs/es/curriculum.json',
+  './data/packs/es/vocabulary.json',
+  './data/packs/es/dialogues.json',
+  './data/achievements.json',
+  './manifest.json'
 ];
 
 self.addEventListener('install', (e) => {

@@ -3,6 +3,7 @@ const App = (() => {
   let vocabData = null;
   let dialogueData = null;
   let achievementDefs = null;
+  let activePack = null;
   let player = null;
 
   let currentWorldId = null;
@@ -13,17 +14,20 @@ const App = (() => {
 
   async function init() {
     try {
-      const [curRes, vocRes, diaRes, achRes] = await Promise.all([
-        fetch('data/curriculum.json').then((r) => r.json()),
-        fetch('data/vocabulary.json').then((r) => r.json()),
-        fetch('data/dialogues.json').then((r) => r.json()),
+      const [pack, achRes] = await Promise.all([
+        LangPack.load(LangPack.getActiveId()),
         fetch('data/achievements.json').then((r) => r.json())
       ]);
-      curriculum = curRes;
-      vocabData = vocRes;
-      dialogueData = diaRes;
+      activePack = pack;
+      curriculum = pack.curriculum;
+      vocabData = pack.vocabulary;
+      dialogueData = pack.dialogues;
       achievementDefs = achRes.achievements;
+      Storage.setNamespace(pack.manifest.id);
       Exercises.setData(vocabData, dialogueData);
+      if (typeof Voice !== 'undefined') {
+        Voice.setLocales(pack.manifest.sttLocale, pack.manifest.ttsLocale);
+      }
     } catch (e) {
       console.error('Failed to load game data:', e);
       return;
@@ -561,5 +565,13 @@ const App = (() => {
 
   document.addEventListener('DOMContentLoaded', init);
 
-  return { init };
+  function getPack() {
+    return activePack;
+  }
+
+  function getPlayerState() {
+    return player;
+  }
+
+  return { init, getPack, getPlayerState };
 })();

@@ -1,0 +1,5 @@
+{
+  "packs": [
+    { "id": "es", "name": "Spanish", "nativeName": "Español", "flag": "🇪🇸" }
+  ]
+}

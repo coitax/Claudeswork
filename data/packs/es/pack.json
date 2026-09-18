@@ -1,0 +1,14 @@
+{
+  "id": "es",
+  "name": "Spanish",
+  "nativeName": "Español",
+  "flag": "🇪🇸",
+  "ttsLocale": "es-ES",
+  "sttLocale": "es-ES",
+  "altLocales": ["es-MX", "es-US"],
+  "files": {
+    "curriculum": "curriculum.json",
+    "vocabulary": "vocabulary.json",
+    "dialogues": "dialogues.json"
+  }
+}

@@ -1,6 +1,18 @@
 const Storage = (() => {
   const PREFIX = 'sq_';
 
+  // Per-language namespace for progress data (player, SRS, review count).
+  // Spanish ('es') keeps un-prefixed keys so existing saves keep working.
+  let ns = '';
+
+  function setNamespace(packId) {
+    ns = !packId || packId === 'es' ? '' : packId + '_';
+  }
+
+  function nsKey(key) {
+    return ns + key;
+  }
+
   function get(key, fallback) {
     try {
       const raw = localStorage.getItem(PREFIX + key);
@@ -23,19 +35,19 @@ const Storage = (() => {
   }
 
   function getPlayer() {
-    return get('player', null);
+    return get(ns + 'player', null);
   }
 
   function savePlayer(player) {
-    set('player', player);
+    set(ns + 'player', player);
   }
 
   function getSRS() {
-    return get('srs', {});
+    return get(ns + 'srs', {});
   }
 
   function saveSRS(srsData) {
-    set('srs', srsData);
+    set(ns + 'srs', srsData);
   }
 
   function getStreak() {
@@ -60,5 +72,5 @@ const Storage = (() => {
     });
   }
 
-  return { get, set, remove, getPlayer, savePlayer, getSRS, saveSRS, getStreak, saveStreak, getAchievements, saveAchievements, clearAll };
+  return { get, set, remove, setNamespace, nsKey, getPlayer, savePlayer, getSRS, saveSRS, getStreak, saveStreak, getAchievements, saveAchievements, clearAll };
 })();
