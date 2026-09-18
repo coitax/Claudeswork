@@ -141,10 +141,10 @@
   background: var(--gray);
 }
 
-/* Street exit button */
+/* Street exit button — must stack above the encounter overlay (z-index 50) */
 .street-exit {
   position: absolute;
   top: 0.6rem;
   right: 0.6rem;
-  z-index: 30;
+  z-index: 60;
 }

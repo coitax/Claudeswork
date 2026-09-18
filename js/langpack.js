@@ -146,7 +146,24 @@ const LangPack = (() => {
           exercises: [
             { type: 'flashcard', items: grp.words },
             { type: 'match', words: grp.words.slice(0, 6) },
-            { type: 'translate', items: grp.words.slice(0, 4).map((word) => ({ word })) }
+            {
+              type: 'translate',
+              items: grp.words.slice(0, 4).map((word) => {
+                const answer = word.replace(/_/g, ' ');
+                const answerTokens = answer.split(' ');
+                const distractors = grp.words
+                  .filter((w) => w !== word)
+                  .map((w) => w.replace(/_/g, ' ').split(' ')[0])
+                  .filter((t, i, a) => !answerTokens.includes(t) && a.indexOf(t) === i)
+                  .slice(0, 3);
+                return {
+                  direction: 'en-es',
+                  source: (vocabulary[word] && vocabulary[word].en) || answer,
+                  answer: answer,
+                  words: answerTokens.concat(distractors)
+                };
+              })
+            }
           ]
         });
       }

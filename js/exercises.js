@@ -3,10 +3,23 @@ const Exercises = (() => {
   let dialogueData = {};
   let activeTimer = null;
   let activeBossState = null;
+  let activeTimeouts = [];
 
   function setData(vocab, dialogues) {
     vocabData = vocab;
     dialogueData = dialogues;
+  }
+
+  // Timeouts that advance exercise state must be cancellable, or an exercise
+  // abandoned mid-run (exit button, street encounter aborted) fires its
+  // completion callback later against live game state.
+  function schedule(fn, ms) {
+    const id = setTimeout(() => {
+      activeTimeouts = activeTimeouts.filter((t) => t !== id);
+      fn();
+    }, ms);
+    activeTimeouts.push(id);
+    return id;
   }
 
   function cancelActive() {
@@ -14,6 +27,8 @@ const Exercises = (() => {
       clearInterval(activeTimer);
       activeTimer = null;
     }
+    activeTimeouts.forEach((id) => clearTimeout(id));
+    activeTimeouts = [];
     if (activeBossState) {
       activeBossState.cancelled = true;
       activeBossState = null;
@@ -228,7 +243,7 @@ const Exercises = (() => {
             Audio8Bit.correct();
             selected = null;
             if (matchedCount === pairs.length) {
-              setTimeout(() => onComplete(results), 500);
+              schedule(() => onComplete(results), 500);
             }
           } else {
             tile.classList.add('wrong');
@@ -337,7 +352,7 @@ const Exercises = (() => {
         }
         dialogueContainer.appendChild(box);
         lineIdx++;
-        setTimeout(showLine, 300);
+        schedule(showLine, 300);
       } else if (line.speaker === 'player') {
         results.total++;
         const optionsDiv = UI.create('div', 'dialogue-options anim-fade-in');
@@ -373,7 +388,7 @@ const Exercises = (() => {
           dialogueContainer.appendChild(playerBox);
 
           lineIdx++;
-          setTimeout(() => {
+          schedule(() => {
             optionsDiv.remove();
             showLine();
           }, 800);

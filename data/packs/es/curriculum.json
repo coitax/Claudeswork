@@ -473,7 +473,7 @@
           "description": "Tell your travel story!",
           "isBoss": true,
           "timeLimit": 150,
-          "vocab": ["viaje", "hotel", "ayer", "fui", "tuve", "primero", "más", "gustar", "comí", "habité"],
+          "vocab": ["viaje", "hotel", "ayer", "fui", "tuve", "primero", "más", "gustar", "comí", "habitación"],
           "exercises": []
         }
       ]

@@ -147,14 +147,16 @@
 }
 
 .wb-block-es {
-  font-size: 0.45rem;
+  /* px, not rem: Press Start 2P is an 8px-grid bitmap font and the <=360px
+     12px root would scale rem sizes below legibility */
+  font-size: 8px;
   line-height: 1.35;
   color: var(--white);
   word-break: break-word;
 }
 
 .wb-block-en {
-  font-size: 0.38rem;
+  font-size: 7px;
   line-height: 1.3;
   color: var(--gold);
   word-break: break-word;
@@ -197,7 +199,7 @@
   align-items: center;
   justify-content: center;
   padding: 2px;
-  font-size: 0.42rem;
+  font-size: 8px;
   color: var(--red);
   background: rgba(26, 26, 46, 0.92);
   word-break: break-word;
@@ -319,6 +321,5 @@
 }
 
 @media (max-width: 360px) {
-  .wb-block-es { font-size: 0.42rem; }
   .wb-option { font-size: 0.45rem; }
 }

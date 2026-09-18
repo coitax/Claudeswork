@@ -107,6 +107,7 @@ const App = (() => {
 
     UI.el('btn-exit-street').addEventListener('click', () => {
       Audio8Bit.select();
+      Exercises.cancelActive();
       Adventure.stop();
       if (typeof Voice !== 'undefined') Voice.stop();
       UI.el('street-encounter').classList.remove('active');
@@ -434,10 +435,10 @@ const App = (() => {
       const srsData = Storage.getSRS();
       (level.vocab || []).forEach((word) => SRS.initWord(srsData, word));
       Storage.saveSRS(srsData);
-    }
 
-    // Update streak
-    Game.updateStreak();
+      // Only successful runs count toward the daily streak
+      Game.updateStreak();
+    }
 
     // Check achievements
     checkAchievements(isBoss);
@@ -450,7 +451,7 @@ const App = (() => {
 
     const title = UI.el('results-title');
     if (exerciseResults.total === 0 || stars === 0) {
-      title.textContent = 'TIME\'S UP!';
+      title.textContent = player && player.hearts <= 0 ? 'OUT OF HEARTS!' : 'TRY AGAIN!';
     } else if (stars === 3) {
       title.textContent = 'PERFECT!';
     } else {
@@ -817,7 +818,15 @@ const App = (() => {
     const activeId = LangPack.getActiveId();
 
     packs.forEach((p) => {
-      const row = UI.create('button', 'lang-option' + (p.id === activeId ? ' active' : ''));
+      const row = UI.create('div', 'lang-option' + (p.id === activeId ? ' active' : ''));
+      row.setAttribute('role', 'button');
+      row.setAttribute('tabindex', '0');
+      row.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          row.click();
+        }
+      });
       row.appendChild(UI.create('span', 'lang-option-flag', p.flag || '🌍'));
       const name = UI.create('span', 'lang-option-name', p.name);
       name.appendChild(UI.create('span', 'lang-option-native', ' ' + (p.nativeName || '')));

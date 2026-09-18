@@ -15,6 +15,7 @@ const Adventure = (() => {
   // --- State ---
   let opts = null;
   let running = false;
+  let sessionSeq = 0;
   let paused = false;
   let inConversation = false;
   let rafId = 0;
@@ -438,8 +439,9 @@ const Adventure = (() => {
     prevAction = true;
     if (typeof Audio8Bit !== 'undefined' && Audio8Bit.select) Audio8Bit.select();
     let finished = false;
+    const session = sessionSeq;
     function done(success) {
-      if (finished) return;
+      if (finished || session !== sessionSeq) return;
       finished = true;
       if (success && !npc.completed) {
         npc.completed = true;
@@ -748,6 +750,9 @@ const Adventure = (() => {
       accumulator += delta;
       while (accumulator >= STEP) {
         update(STEP);
+        // onComplete inside update() may call stop(), which tears down the
+        // canvas contexts — bail before touching them again.
+        if (!running) return;
         accumulator -= STEP;
       }
     } else {
@@ -795,6 +800,7 @@ const Adventure = (() => {
     worldTime = 0;
     accumulator = 0;
     resize();
+    sessionSeq++;
     running = true;
     lastTime = performance.now();
     rafId = requestAnimationFrame(frame);

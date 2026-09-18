@@ -477,6 +477,11 @@ const Importer = (() => {
     let pack;
     if (state.fullPack) {
       pack = state.fullPack; // already sanity-checked in parseJson
+      if (String(pack.manifest.id).trim().toLowerCase() === 'es') {
+        showError('Code "es" is reserved for the built-in Spanish pack — change the "id" in the pack JSON and try again.');
+        Audio8Bit.wrong();
+        return;
+      }
     } else {
       const errors = validateManifest();
       if (errors.length) {
