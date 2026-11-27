@@ -338,7 +338,16 @@ const Exercises = (() => {
       card.appendChild(UI.create('div', 'exercise-prompt', 'Fill in the blank'));
 
       const sentenceEl = UI.create('div', 'exercise-sentence');
-      sentenceEl.innerHTML = item.sentence.replace('___', '<span class="blank">?</span>');
+      const sentence = String(item.sentence == null ? '' : item.sentence);
+      const cut = sentence.indexOf('___');
+      if (cut === -1) {
+        sentenceEl.appendChild(document.createTextNode(sentence));
+        sentenceEl.appendChild(UI.create('span', 'blank', '?'));
+      } else {
+        sentenceEl.appendChild(document.createTextNode(sentence.slice(0, cut)));
+        sentenceEl.appendChild(UI.create('span', 'blank', '?'));
+        sentenceEl.appendChild(document.createTextNode(sentence.slice(cut + 3)));
+      }
       card.appendChild(sentenceEl);
 
       if (item.hint) {
